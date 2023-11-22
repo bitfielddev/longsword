@@ -85,17 +85,15 @@ end
 -- @float[opt=1] mul The value to multiply it by
 -- @treturn vec The new position
 -- @treturn ang The new angles
-function longsword.math.translate(pos, ang, nPos, nAng, mul)
+function longsword.math.translate(originalVec, originalAng, newVec, newAng, mul)
     mul = mul or 1
-    
-	ang:RotateAroundAxis(ang:Right(), nAng.p * mul)
-	ang:RotateAroundAxis(ang:Up(), nAng.y * mul)
-	ang:RotateAroundAxis(ang:Forward(), nAng.r * mul)
+    originalAng:RotateAroundAxis(originalAng:Right(), newAng.p * mul)
+    originalAng:RotateAroundAxis(originalAng:Up(), newAng.y * mul)
+    originalAng:RotateAroundAxis(originalAng:Forward(), newAng.r * mul)
 
-    pos = pos + nPos.x * ang:Right() * mul
-	pos = pos + nPos.y * ang:Forward() * mul
-	pos = pos + nPos.z * ang:Up() * mul
+    originalVec = originalVec + newVec.x * originalAng:Right() * mul
+    originalVec = originalVec + newVec.y * originalAng:Forward() * mul
+    originalVec = originalVec + newVec.z * originalAng:Up() * mul
 
-
-    return pos, ang
+    return originalVec, originalAng
 end

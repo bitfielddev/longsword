@@ -34,7 +34,7 @@ function SWEP:GiveAttachment(attID)
 	self:ProcessAttachmentAdd(attID)
 end
 
-function SWEP:RemoveAttachment(attID)
+function SWEP:TakeAttachment(attID)
 	local attData = self.Attachments[attID]
 	if not attData then return end
 
@@ -136,6 +136,11 @@ function SWEP:DrawVMAttachment(attID)
 
 	local att = attData._CSModel
 	local c = attData.Cosmetic
+
+	if not c.Bone then
+		return
+	end
+
 	local bone = vm:LookupBone(c.Bone)
 
 	if not bone then

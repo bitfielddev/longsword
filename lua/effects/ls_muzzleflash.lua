@@ -10,7 +10,7 @@ function EFFECT:Init( data )
     if not IsValid(wep) then return end
 
     ParticleEffectAttach(
-        wep.MuzzleFlashName or "hl2mmod_muzzleflash_shotgun",
+        wep.MuzzleFlashName or "muzzleflash_pistol",
         PATTACH_POINT_FOLLOW,
         data:GetEntity(),
         data:GetAttachment()
