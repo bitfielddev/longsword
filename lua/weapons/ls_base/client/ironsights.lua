@@ -36,7 +36,7 @@ function SWEP:DoIronsightsRecoil()
 	local recoilAng = Angle(
 		pitch * 4,
 		0,
-		0
+		(recoilData.YawValue or 1) * re * 1.4
 	)
 
 	local roll = math.cos(ct * (recoilData.RollRandom or 1)) * 1.2 * rollVal
