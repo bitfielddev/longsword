@@ -6,9 +6,7 @@ function SWEP:PreDrawViewModel(vm)
 
 	self:OffsetThink()
 
-	if self.scopedIn then
-		return self.scopedIn
-	end
+	return self:ScopedIn()
 end
 
 function SWEP:GetOffset()

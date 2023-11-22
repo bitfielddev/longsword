@@ -2,6 +2,61 @@ local debugCol = Color(0, 255, 0, 200)
 local ironFade = ironFade or 0
 local GetConVar = GetConVar
 local LocalPlayer = LocalPlayer
+
+local black = Color(0, 0, 0, 255)
+
+function SWEP:DrawAttachmentHUD(attID, hdr)
+	local ft = RealFrameTime()
+
+    local data = self.Attachments[attID]
+    if not data then return end
+
+	if data.Scope then
+		self:DrawVMAttachmentScope(attID)
+	end
+
+	if data.NeedsHDR and not hdr and self:GetIronsights() then
+		draw.SimpleText("WARNING!", "ChatFont", ScrW() * 0.5, ScrH() * 0.5, nil, TEXT_ALIGN_CENTER)
+		draw.SimpleText("To see this scope, you must enable HDR in your settings.", "ChatFont", ScrW() * 0.5, (ScrH() * 0.5) + 20, nil, TEXT_ALIGN_CENTER)
+		draw.SimpleText("Press ESC > Settings > Video > Advanced Settings > High Dynamic Range to FULL", "ChatFont", ScrW() * 0.5 , (ScrH() * 0.5) + 40, nil, TEXT_ALIGN_CENTER)
+		draw.SimpleText("You will then have to rejoin.", "ChatFont", ScrW() * 0.5 , (ScrH() * 0.5) + 60, nil, TEXT_ALIGN_CENTER)
+		return
+	end
+
+    local w, h = ScrW(), ScrH()
+    local cw, ch = w / 2, h / 2
+
+	if data.Behaviour != "sniperscope" then return end
+    if not self:GetIronsights() then return end
+
+    local tex = data.ScopeTexture
+    local col = data.ScopeColor or color_white
+    local bgCol = data.ScopeBGColor or black
+
+    local sw, sh = w / 1.2, h / 1.2
+    local bw, bh = w - sw, h - sh
+
+    surface.SetDrawColor(bgCol)
+    surface.DrawRect(0, 0, w, h)
+
+    surface.SetDrawColor(col)
+    surface.SetMaterial(tex)
+    surface.DrawTexturedRect(cw - sw / 2, ch - sh / 2, sw, sh)
+end
+
+function SWEP:ScopedIn()
+	if not self:GetIronsights() then return false end
+
+	for attID, _ in pairs(self.EquippedAttachments or {}) do
+		local data = self.Attachments[attID]
+		if not data then continue end
+
+		if data.Behaviour == "sniperscope" then
+			return true
+		end
+	end
+end
+
 function SWEP:DrawHUD()
 	self.EquippedAttachments = self.EquippedAttachments or {}
 	for attID, _ in pairs(self.EquippedAttachments) do
@@ -70,79 +125,9 @@ function SWEP:DrawHUD()
 		end
 	end
 
-	if self:HasAttachment("") then
-		if self.scopedIn then
-			self.scopedIn = false
-		end
-		return
-	end
+	local hdr = (GetConVar("mat_hdr_level"):GetInt() or 0) != 0
 
-	local attachment = self:GetCurAttachment()
-
-	if not self.Attachments or not self.Attachments[attachment] or self.Attachments[attachment].Behaviour != "sniper_sight" then
-		if self.scopedIn then
-			self.scopedIn = false
-		end
-		return
-	end
-
-	if not self:GetIronsights() then
-		ironFade = 0
-		self.scopedIn = false
-		return
-	end
-
-	local scrw = ScrW()
-	local scrh = ScrH()
-	local ft = FrameTime()
-
-	if ironFade != 1 and not self.scopedIn then
-		ironFade = math.Clamp(ironFade + (ft * 2.6), 0, 1)
-
-		surface.SetDrawColor(ColorAlpha(color_black, ironFade * 255))
-		surface.DrawRect(0, 0, scrw, scrh)
-
-		return
-	else
-		self.scopedIn = true
-	end
-
-	if self.scopedIn and ironFade != 0 then
-		ironFade = math.Clamp(ironFade - (ft * 1), 0, 1)
-
-		surface.SetDrawColor(ColorAlpha(color_black, ironFade * 255))
-		surface.DrawRect(0, 0, scrw, scrh)
-	end
-
-	ls_StopHUDDraw = true
-
-	local scopeh = scrh * 1
-	local scopew = scopeh * 1.8
-	local hw = (scrw * 0.5) - (scopew / 2)
-	local hh = (scrh * 0.5) - (scopeh / 2)
-
-	surface.SetDrawColor(color_black)
-	surface.DrawRect(0, 0, scrw, hh)
-	surface.DrawRect(0, 0, scrw - scopew, scrh)
-	surface.DrawRect(scrw - hw, 0, scrw - scopew, scrh)
-	surface.DrawRect(0, hh + scopeh, scrw, scrh)
-
-	surface.SetDrawColor(self.Attachments[attachment].ScopeColour or color_white)
-	surface.SetMaterial(self.Attachments[attachment].ScopeTexture)
-	surface.DrawTexturedRect(hw, hh, scopew, scopeh)
-
-	if self.Attachments[attachment].NeedsHDR then
-		local hasHDR = GetConVar("mat_hdr_level"):GetInt() or 0
-
-		if hasHDR == 0 then
-			draw.SimpleText("WARNING!", "ChatFont", ScrW() * 0.5, ScrH() * 0.5, nil, TEXT_ALIGN_CENTER)
-			draw.SimpleText("To see this scope, you must enable HDR in your settings.", "ChatFont", ScrW() * 0.5, (ScrH() * 0.5) + 20, nil, TEXT_ALIGN_CENTER)
-			draw.SimpleText("Press ESC > Settings > Video > Advanced Settings > High Dynamic Range to FULL", "ChatFont", ScrW() * 0.5 , (ScrH() * 0.5) + 40, nil, TEXT_ALIGN_CENTER)
-			draw.SimpleText("You will then have to rejoin.", "ChatFont", ScrW() * 0.5 , (ScrH() * 0.5) + 60, nil, TEXT_ALIGN_CENTER)
-		end
-	end
-
-	if self.Attachments[attachment].ScopePaint then
-		self.Attachments[attachment].ScopePaint(self)
+	for attachment, _ in pairs(self.EquippedAttachments or {}) do
+		self:DrawAttachmentHUD(attachment, hdr)
 	end
 end
