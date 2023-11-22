@@ -1,0 +1,74 @@
+function SWEP:AdjustMouseSensitivity()
+	if self:GetIronsights() then return self.IronsightsSensitivity end
+end
+
+local appr = math.Approach
+
+local zero = Vector()
+local zeroAng = Angle()
+
+SWEP.IronsightsMidAng = Angle(6, 0, 0)
+SWEP.IronsightsMid = Vector(-4, 0, -3)
+
+function SWEP:GetRecoilMultiplier()
+	return (self.Recoil and self.Recoil.VisualMultiplier or self.IronsightsRecoilVisualMultiplier) or 1
+end
+
+function SWEP:DoIronsightsRecoil()
+	self._CustomRecoil = self._CustomRecoil or {}
+
+	local recoilData = self._CustomRecoil
+	local recoilInfo = self.Recoil or {}
+
+	local ft = RealFrameTime()
+	local ct = RealTime()
+
+	local re = (recoilData.Value or 1) * self:GetRecoilMultiplier()
+	local pitch = (recoilData.PitchValue or 1) * (recoilInfo.PitchMultiplier or 1) * self:GetRecoilMultiplier()
+	local rollVal = (recoilData.RollValue or 1) * (recoilInfo.RollMultiplier or 1) * self:GetRecoilMultiplier()
+
+	local recoilPos = Vector(
+		0,
+		-re * 12 * (recoilInfo.BackMultiplier or 1),
+		(-pitch * 0.8)
+	)
+
+	local recoilAng = Angle(
+		pitch * 4,
+		0,
+		0
+	)
+
+	local roll = math.cos(ct * (recoilData.RollRandom or 1)) * 1.2 * rollVal
+
+	self.RecoilRoll = Lerp(ft * 2, self.RecoilRoll or 0, roll)
+	recoilAng.y = recoilAng.y + roll
+
+	local rpSmooth = LerpVector(ft * 32, self.VMRPos or recoilPos, recoilPos)
+	self.VMRPos = rpSmooth
+
+	local rpAngSmooth = LerpAngle(ft * 32, self.VMRAng or recoilAng, recoilAng)
+	self.VMRAng = rpAngSmooth
+
+	return rpSmooth, rpAngSmooth
+end
+
+function SWEP:IronsightsOffset(oPos, oAng)
+	local ct = CurTime()
+	local ft = RealFrameTime()
+	local is = self:GetIronsights()
+
+	local dir = is and 1 or 0
+	self.IronsightsFrac = Lerp(ft * (is and 3.1 or 2.1), self.IronsightsFrac or 0, dir)
+
+	local frac = self.IronsightsFrac
+	local vec = longsword.math.vecQuadBezier(zero, self.IronsightsMid or zero, self.IronsightsPos, frac)
+	local ang = longsword.math.angQuadBezier(zeroAng, self.IronsightsMidAng or zeroAng, self.IronsightsAng, frac )
+
+	local rPos, rAng = self:DoIronsightsRecoil()
+		
+	vec:Add(rPos)
+	ang:Add(rAng)
+
+	return vec, ang
+end
