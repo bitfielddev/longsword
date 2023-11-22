@@ -167,7 +167,14 @@ function SWEP:Deploy()
 
 	self:EmitWeaponSound(self:GetDeploySound())
 
-	self:SetNextPrimaryFire(CurTime() + self:PlayAnim(ACT_VM_DRAW))
+	local vm = self:GetOwner():GetViewModel()
+	local seq = vm:SelectWeightedSequence(self.DrawAnim or ACT_VM_DRAW)
+	local dur = vm:SequenceDuration(dur)
+
+	if dur != 0 and dur then
+		self:SetNextPrimaryFire(CurTime() + self:PlayAnim(self.DrawAnim or ACT_VM_DRAW))
+
+	end
 
 	self:SetLowered(false)
 	self:SetHoldType(self.HoldType)
