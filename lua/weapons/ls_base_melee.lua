@@ -42,7 +42,6 @@ end
 
 function SWEP:Think()
 	self:IdleThink()
-	self:SwayThink()
 end
 
 function SWEP:Reload()

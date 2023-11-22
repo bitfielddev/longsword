@@ -258,7 +258,7 @@ function SWEP:TranslateFOV(fov)
 		self.LastFOVUpdate = CurTime()
 	end
 
-	if self.scopedIn then
+	if self:ScopedIn() then
 		return fov * (self.FOVScoped or 1)
 	end
 
