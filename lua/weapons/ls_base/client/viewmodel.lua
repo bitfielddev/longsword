@@ -74,7 +74,7 @@ function SWEP:ViewBob(eyePos, eyeAng)
 	self.VMRoll = rdSmooth
 	ang.r = ang.r + rdSmooth
 	
-	return longsword.math.rotateAround(eyePos, eyeAng, self.MuzzleData.Pos, Angle(5, 0, 0))
+	return longsword.math.rotateAround(eyePos, eyeAng, self.MuzzleData.Pos, ang)
 end
 
 function SWEP:WalkBobOffset(mv, ct, ft)
