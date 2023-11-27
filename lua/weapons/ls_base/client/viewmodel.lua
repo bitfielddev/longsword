@@ -74,7 +74,7 @@ function SWEP:ViewBob(eyePos, eyeAng)
 	self.VMRoll = rdSmooth
 	ang.r = ang.r + rdSmooth
 	
-	return longsword.math.translate(eyePos, eyeAng, pos, ang)
+	return longsword.math.rotateAround(eyePos, eyeAng, self.MuzzleData.Pos, Angle(5, 0, 0))
 end
 
 function SWEP:WalkBobOffset(mv, ct, ft)
@@ -215,6 +215,15 @@ function SWEP:ViewCrouchOffset(eyePos, eyeAng)
 end
 
 function SWEP:GetViewModelPosition( pos, ang )
+	local vm = self:GetOwner():GetViewModel()
+	local muz = self:LookupAttachment(self.MuzzleAttachment or "muzzle")
+	local att = (muz > 0) and self:GetAttachment(muz) or { Pos = vm:GetPos(), Ang = vm:GetAngles() }
+
+	att.Pos = vm:WorldToLocal(att.Pos)
+	att.Ang = vm:WorldToLocalAngles(att.Ang)
+
+	self.MuzzleData = att
+
 	ang:RotateAroundAxis( ang:Right(), self.ViewModelAngle.p )
 	ang:RotateAroundAxis( ang:Up(), self.ViewModelAngle.y )
 	ang:RotateAroundAxis( ang:Forward(), self.ViewModelAngle.r )
