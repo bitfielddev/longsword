@@ -72,9 +72,11 @@ function SWEP:ViewBob(eyePos, eyeAng)
 	local rd = move:Dot(self:GetOwner():GetRight()) * 0.05 * (self:GetIronsights() and 0.4 or 1)
 	local rdSmooth = Lerp(ft * 4, self.VMRoll or rd, rd)
 	self.VMRoll = rdSmooth
-	ang.r = ang.r + rdSmooth
+	ang.r = ang.r - rdSmooth
 	
-	return longsword.math.rotateAround(eyePos, eyeAng, self.MuzzleData.Pos, ang)
+	eyePos, eyeAng = longsword.math.translate(eyePos, eyeAng, pos, ang)
+
+	return eyePos, eyeAng
 end
 
 function SWEP:WalkBobOffset(mv, ct, ft)
@@ -232,10 +234,10 @@ function SWEP:GetViewModelPosition( pos, ang )
 	pos = pos + self.ViewModelPos.y * ang:Forward()
 	pos = pos + self.ViewModelPos.z * ang:Up()
 
+	pos, ang = self:ViewBob(pos, ang)
 	pos, ang = self:ViewSwayOffset(pos, ang)
 	pos, ang = self:ViewIdleOffset(pos, ang)
 	pos, ang = self:ViewCrouchOffset(pos, ang)
-	pos, ang = self:ViewBob(pos, ang)
 	pos, ang = self:JumpOffset(pos, ang)
 	local ironPos, ironAng = self:IronsightsOffset()
 

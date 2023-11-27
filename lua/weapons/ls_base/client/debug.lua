@@ -15,33 +15,61 @@ function SWEP:DrawAttachmentHUD(attID, hdr)
 		self:DrawVMAttachmentScope(attID)
 	end
 
-	if data.NeedsHDR and not hdr and self:GetIronsights() then
-		draw.SimpleText("WARNING!", "ChatFont", ScrW() * 0.5, ScrH() * 0.5, nil, TEXT_ALIGN_CENTER)
-		draw.SimpleText("To see this scope, you must enable HDR in your settings.", "ChatFont", ScrW() * 0.5, (ScrH() * 0.5) + 20, nil, TEXT_ALIGN_CENTER)
-		draw.SimpleText("Press ESC > Settings > Video > Advanced Settings > High Dynamic Range to FULL", "ChatFont", ScrW() * 0.5 , (ScrH() * 0.5) + 40, nil, TEXT_ALIGN_CENTER)
-		draw.SimpleText("You will then have to rejoin.", "ChatFont", ScrW() * 0.5 , (ScrH() * 0.5) + 60, nil, TEXT_ALIGN_CENTER)
+	if not self:GetIronsights() then
+		ironFade = 0
 		return
 	end
 
-    local w, h = ScrW(), ScrH()
-    local cw, ch = w / 2, h / 2
+	local scrw = ScrW()
+	local scrh = ScrH()
+	local ft = FrameTime()
+	local scoped = self:ScopedIn()
 
-	if data.Behaviour != "sniperscope" then return end
-    if not self:GetIronsights() then return end
+	if ironFade != 1 and not scoped then
+		ironFade = math.Clamp(ironFade + (ft * 2.6), 0, 1)
 
-    local tex = data.ScopeTexture
-    local col = data.ScopeColor or color_white
-    local bgCol = data.ScopeBGColor or black
+		surface.SetDrawColor(ColorAlpha(color_black, ironFade * 255))
+		surface.DrawRect(0, 0, scrw, scrh)
 
-    local sw, sh = w / 1.2, h / 1.2
-    local bw, bh = w - sw, h - sh
+		return
+	end
 
-    surface.SetDrawColor(bgCol)
-    surface.DrawRect(0, 0, w, h)
+	if scoped and ironFade != 0 then
+		ironFade = math.Clamp(ironFade - (ft * 1), 0, 1)
 
-    surface.SetDrawColor(col)
-    surface.SetMaterial(tex)
-    surface.DrawTexturedRect(cw - sw / 2, ch - sh / 2, sw, sh)
+		surface.SetDrawColor(ColorAlpha(color_black, ironFade * 255))
+		surface.DrawRect(0, 0, scrw, scrh)
+	end
+
+	local scopeh = scrh * 1
+	local scopew = scopeh * 1.8
+	local hw = (scrw * 0.5) - (scopew / 2)
+	local hh = (scrh * 0.5) - (scopeh / 2)
+
+	surface.SetDrawColor(color_black)
+	surface.DrawRect(0, 0, scrw, hh)
+	surface.DrawRect(0, 0, scrw - scopew, scrh)
+	surface.DrawRect(scrw - hw, 0, scrw - scopew, scrh)
+	surface.DrawRect(0, hh + scopeh, scrw, scrh)
+
+	surface.SetDrawColor(data.ScopeColour or color_white)
+	surface.SetMaterial(data.ScopeTexture)
+	surface.DrawTexturedRect(hw, hh, scopew, scopeh)
+
+	if data.NeedsHDR then
+		local hasHDR = GetConVar("mat_hdr_level"):GetInt() or 0
+
+		if hasHDR == 0 then
+			draw.SimpleText("WARNING!", "ChatFont", ScrW() * 0.5, ScrH() * 0.5, nil, TEXT_ALIGN_CENTER)
+			draw.SimpleText("To see this scope, you must enable HDR in your settings.", "ChatFont", ScrW() * 0.5, (ScrH() * 0.5) + 20, nil, TEXT_ALIGN_CENTER)
+			draw.SimpleText("Press ESC > Settings > Video > Advanced Settings > High Dynamic Range to FULL", "ChatFont", ScrW() * 0.5 , (ScrH() * 0.5) + 40, nil, TEXT_ALIGN_CENTER)
+			draw.SimpleText("You will then have to rejoin.", "ChatFont", ScrW() * 0.5 , (ScrH() * 0.5) + 60, nil, TEXT_ALIGN_CENTER)
+		end
+	end
+
+	if data.ScopePaint then
+		data.ScopePaint(self)
+	end
 end
 
 function SWEP:ScopedIn()
