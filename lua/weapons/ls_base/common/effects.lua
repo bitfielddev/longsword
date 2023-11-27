@@ -39,12 +39,24 @@ function SWEP:ResetCustomRecoil()
 	self._CustomRecoil.RollRandom = math.Rand(12, 24)
 end
 
+function SWEP:ShouldAnimateFire()
+	if self.Recoil then
+		if self.Recoil.DoFireAnim then
+			return true
+		end
+	end
+
+	if self.UseIronsightsRecoil then
+		return false
+	end
+
+	return true
+end
+
 function SWEP:ShootEffects()
-	if not self:GetIronsights() or not self.UseIronsightsRecoil then
+	if not self:GetIronsights() or self:ShouldAnimateFire() then
 		self:PlayAnim(self:GetIronsights() and (self.IronsightsAnimation or ACT_VM_PRIMARYATTACK_1) or (self.FireAnim or ACT_VM_PRIMARYATTACK))
 		self:QueueIdle()
-	else
-		self:SetIronsightsRecoil( math.Clamp( 7.5 * (self.IronsightsRecoilVisualMultiplier or 1) * self.Primary.Recoil, 0, 20 ) )
 	end
 
 	if CLIENT then
