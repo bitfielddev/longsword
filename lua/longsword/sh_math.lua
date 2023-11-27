@@ -97,3 +97,20 @@ function longsword.math.translate(originalVec, originalAng, newVec, newAng, mul)
 
     return originalVec, originalAng
 end
+
+--- Rotates a vector/angle around a vector.
+-- @vec pos The original angle
+-- @ang ang The original position
+-- @vec vec The vector to rotate around with
+-- @ang rot The amount to rotate it by
+-- @treturn vec The new position
+-- @treturn ang The new angles
+function longsword.math.rotateAround(pos, ang, vec, rot)
+    local mat = Matrix()
+    mat:SetTranslation(pos)
+    mat:SetAngles(ang)
+    mat:Translate(vec)
+    mat:Rotate(-rot)
+    mat:Translate(-vec)
+    return mat:GetTranslation(), mat:GetAngles()
+end
