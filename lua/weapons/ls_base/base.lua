@@ -173,13 +173,13 @@ function SWEP:Deploy()
 
 	if dur != 0 and dur then
 		self:SetNextPrimaryFire(CurTime() + self:PlayAnim(self.DrawAnim or ACT_VM_DRAW))
+		self:QueueIdle()
 
 	end
 
 	self:SetLowered(false)
 	self:SetHoldType(self.HoldType)
 
-	self:QueueIdle()
 	return true
 end
 
@@ -214,8 +214,4 @@ function SWEP:Holster(w)
 	end
 	
 	return true
-end
-
-function SWEP:FrameTime()
-	return RealFrameTime()
 end
