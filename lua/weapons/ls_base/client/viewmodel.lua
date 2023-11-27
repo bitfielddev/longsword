@@ -121,7 +121,7 @@ function SWEP:ViewIdleOffset(eyePos, eyeAng)
 	if self.NoIdle then return eyePos, eyeAng end
 	local ct = CurTime()
 
-	local amp = self:GetIronsights() and 0.1 or 1
+	local amp = self:GetIronsights() and 0.03 or 1
 
 	local p0 = sin(ct * 1.2) * 0.55
 
