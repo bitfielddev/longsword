@@ -50,7 +50,6 @@ SWEP.IronsightsAng = Angle( 0, 0, 0 )
 SWEP.IronsightsFOV = 0.8
 SWEP.IronsightsSensitivity = 0.8
 SWEP.IronsightsCrosshair = false
-SWEP.UseIronsightsRecoil = false
 SWEP.scopedIn = SWEP.scopedIn or false
 
 

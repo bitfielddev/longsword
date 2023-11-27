@@ -17,7 +17,7 @@ function SWEP:ShouldResetCustomRecoil()
 	end
 
 	if self.Recoil then
-		if self.Recoil.IronsightsOnly and not self:GetIronsights() then
+		if (self.Recoil.IronsightsOnly == true or self.Recoil.IronsightsOnly == nil) and not self:GetIronsights() then
 			return false
 		end
 
