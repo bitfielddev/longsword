@@ -63,16 +63,18 @@ function SWEP:ViewBob(eyePos, eyeAng)
 		mv = mv * 0.2
 	end
 	
+	self.BobTime = (self.BobTime or 0) + RealFrameTime() * mv
+	print(self.BobTime)
 	if spr then
-		pos, ang = self:SprintBobOffset(mv, ct, ft)
+		pos, ang = self:SprintBobOffset(mv, self.BobTime, ft)
 	else
-		pos, ang = self:WalkBobOffset(mv, ct, ft)
+		pos, ang = self:WalkBobOffset(mv, self.BobTime, ft)
 	end
 
 	local rd = move:Dot(self:GetOwner():GetRight()) * 0.05 * (self:GetIronsights() and 0.4 or 1)
 	local rdSmooth = Lerp(ft * 4, self.VMRoll or rd, rd)
 	self.VMRoll = rdSmooth
-	ang.r = ang.r - rdSmooth
+	ang.r = ang.r + rdSmooth
 	
 	eyePos, eyeAng = longsword.math.translate(eyePos, eyeAng, pos, ang)
 
@@ -80,18 +82,21 @@ function SWEP:ViewBob(eyePos, eyeAng)
 end
 
 function SWEP:WalkBobOffset(mv, ct, ft)
-	local p0 = (cos(ct * 8.4) * 1.2 * mv) + (cos(ct * 2.2) * 1.2 * mv)
-	local p1 = (sin(ct * 16.8) * 0.2 * mv) + (sin(ct * 18) * 0.3 * mv)
+	ct = ct * 1.5
+	local x = (cos(ct * 8.4) * 1.6 * mv)
+	local z = (sin(ct * 16.8) * 0.6 * mv)
 
+	local y = ((sin(ct * 2.0) + 1) / 2) * 1.0 * mv
+	
 	local pos = Vector(
-		0,
-		0,
-		0
+		x,
+		-y * 2,
+		z
 	)
 
 	local ang = Angle(
-		p1 * 2.5,
-		p0 * 2.5,
+		0,
+		0,
 		0
 	)
 
@@ -99,21 +104,25 @@ function SWEP:WalkBobOffset(mv, ct, ft)
 end
 
 function SWEP:SprintBobOffset(mv, ct, ft)
-	ct = ct * 1.4
-	local p0 = (cos(ct * 8.4) * 1.2 * mv) + (cos(ct * 2.2) * 1.2 * mv)
-	local p1 = (sin(ct * 16.8) * 0.2 * mv) + (sin(ct * 18) * 0.3 * mv)
+	ct = ct * 0.65
+	mv = mv * 0.65
+	local x = (cos(ct * 8.4) * 1.2 * mv)
+	local z = (sin(ct * 16.8) * 0.2 * mv)
 
+	local y = ((sin(ct * 2.0) + 1) / 2) * 1.0 * mv
+	
 	local pos = Vector(
-		0,
-		0,
-		0
+		x,
+		-y * 2,
+		z
 	)
 
 	local ang = Angle(
-		p1 * 2.5,
-		p0 * 2.5,
+		0,
+		0,
 		0
 	)
+
 
 
 	return pos, ang
@@ -252,25 +261,26 @@ function SWEP:GetViewModelPosition( pos, ang )
 	local ply = self:GetOwner()
 	local vm = ply:GetViewModel()
 
-	if self.PunchOffset then
-		ang:RotateAroundAxis(ang:Right(), -self.PunchOffset.p)
-		ang:RotateAroundAxis(ang:Up(), self.PunchOffset.y)
-		ang:RotateAroundAxis(ang:Forward(), -self.PunchOffset.r)
-	end
 	return pos, ang
 end
 
+function SWEP:GetViewFOV()
+	if self:GetIronsights() and self.IronsightsFOV then
+		return self.IronsightsFOV
+	end
 
+	if self:ScopedIn() then
+		return self.FOVScoped or 1
+	end
+
+	return 1
+end
 SWEP.FOVMultiplier = 1
 SWEP.LastFOVUpdate = 0 -- gets called many times per frame... weird.
 function SWEP:TranslateFOV(fov)
 	if self.LastFOVUpdate < CurTime() then
-		self.FOVMultiplier = Lerp(RealFrameTime() * 15, self.FOVMultiplier, self:GetIronsights() and self.IronsightsFOV or 1)
+		self.FOVMultiplier = Lerp(RealFrameTime() * 15, self.FOVMultiplier or 0, self:GetViewFOV() or 1)
 		self.LastFOVUpdate = CurTime()
-	end
-
-	if self:ScopedIn() then
-		return fov * (self.FOVScoped or 1)
 	end
 
 	return fov * self.FOVMultiplier

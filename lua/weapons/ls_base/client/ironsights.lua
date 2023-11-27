@@ -23,9 +23,9 @@ function SWEP:DoIronsightsRecoil()
 	local ft = RealFrameTime()
 	local ct = RealTime()
 
-	local re = (recoilData.Value or 1) * self:GetRecoilMultiplier()
-	local pitch = (recoilData.PitchValue or 1) * (recoilInfo.PitchMultiplier or 1) * self:GetRecoilMultiplier()
-	local rollVal = (recoilData.RollValue or 1) * (recoilInfo.RollMultiplier or 1) * self:GetRecoilMultiplier()
+	local re = (recoilData.Value or 0) * self:GetRecoilMultiplier()
+	local pitch = (recoilData.PitchValue or 0) * (recoilInfo.PitchMultiplier or 1) * self:GetRecoilMultiplier()
+	local rollVal = (recoilData.RollValue or 0) * (recoilInfo.RollMultiplier or 1) * self:GetRecoilMultiplier()
 
 	local recoilPos = Vector(
 		0,
