@@ -63,8 +63,7 @@ function SWEP:ViewBob(eyePos, eyeAng)
 		mv = mv * 0.2
 	end
 	
-	self.BobTime = (self.BobTime or 0) + RealFrameTime() * mv
-	print(self.BobTime)
+	self.BobTime = (self.BobTime or 0) + RealFrameTime() * math.Clamp(mv, 0, 0.4)
 	if spr then
 		pos, ang = self:SprintBobOffset(mv, self.BobTime, ft)
 	else
@@ -104,7 +103,7 @@ function SWEP:WalkBobOffset(mv, ct, ft)
 end
 
 function SWEP:SprintBobOffset(mv, ct, ft)
-	ct = ct * 0.65
+	ct = ct * 1.2
 	mv = mv * 0.65
 	local x = (cos(ct * 8.4) * 1.2 * mv)
 	local z = (sin(ct * 16.8) * 0.2 * mv)
