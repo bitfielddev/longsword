@@ -9,22 +9,31 @@ function EFFECT:Init( data )
 
     if not IsValid(wep) then return end
 
-    ParticleEffectAttach(
-        wep.MuzzleFlashName or "muzzleflash_pistol",
-        PATTACH_POINT_FOLLOW,
-        data:GetEntity(),
-        data:GetAttachment()
-    )
+    if (game.SinglePlayer() or IsFirstTimePredicted()) then
+        wep.NextFlash = wep.NextFlash or 0
 
-    -- if not wep.NoFlashShock then
-    --     local size = self.MuzzleFlashShock or "small"
-    --     local name = "muzzle_smoke_shock_" .. size
+        if wep.NextFlash < CurTime() then
+            ParticleEffectAttach(
+                wep.MuzzleFlashName or "muzzleflash_pistol",
+                PATTACH_POINT_FOLLOW,
+                data:GetEntity(),
+                data:GetAttachment()
+            )    
 
-    --     ParticleEffectAttach(
-    --         name,
-    --         PATTACH_POINT_FOLLOW,
-    --         data:GetEntity(),
-    --         data:GetAttachment()
-    --     )
-    -- end
+            wep.NextFlash = CurTime() + 0.25
+        end
+
+    end
+
+    if not wep.NoFlashShock then
+        local size = self.MuzzleFlashShock or "small"
+        local name = "muzzle_smoke_shock_" .. size
+
+        ParticleEffectAttach(
+            name,
+            PATTACH_POINT_FOLLOW,
+            data:GetEntity(),
+            data:GetAttachment()
+        )
+    end
 end
