@@ -53,7 +53,7 @@ function SWEP:ViewBob(eyePos, eyeAng)
 	local movement = move:LengthSqr()
 	local mvRaw = math.Clamp(movement / self.Owner:GetRunSpeed() ^ 2, 0, 1)
 
-	local mv = Lerp(ft8, self.VMLastMV or mvRaw, mvRaw)
+	local mv = Lerp(ft * 4, self.VMLastMV or mvRaw, mvRaw)
 	self.VMLastMV = mv
 
 	local vel = move:GetNormalized()
@@ -63,70 +63,38 @@ function SWEP:ViewBob(eyePos, eyeAng)
 		mv = mv * 0.2
 	end
 	
-	self.BobTime = (self.BobTime or 0) + RealFrameTime() * math.Clamp(mv, 0, 0.4)
 	if spr then
-		pos, ang = self:SprintBobOffset(mv, self.BobTime, ft)
-	else
-		pos, ang = self:WalkBobOffset(mv, self.BobTime, ft)
+		ct = ct * 1.25
+		mv = mv * 0.5
 	end
+
+	-- viewbob code
+
+	local p0 = sin(ct * 4.0) * 1.0 * mv
+	local p1 = cos(ct * 6.0) * 3.0 * mv
+
+	local point = Vector(12 + (p1 * 4), 0, -12 * p0)
+
+	local p0 = sin(ct * 14.0) * 3.0 * mv
+	local p1 = cos(ct * 7.0) * 4.5 * mv
+
+	local ang = Angle(p0, p1, 0) * 1.2
+
+	eyePos, eyeAng = longsword.math.rotateAround(eyePos, eyeAng, point, ang)
+
+	-- end of viewbob code
+
+
 
 	local rd = move:Dot(self:GetOwner():GetRight()) * 0.05 * (self:GetIronsights() and 0.4 or 1)
 	local rdSmooth = Lerp(ft * 4, self.VMRoll or rd, rd)
 	self.VMRoll = rdSmooth
-	ang.r = ang.r + rdSmooth
+	eyeAng.r = eyeAng.r + rdSmooth
 	
-	eyePos, eyeAng = longsword.math.translate(eyePos, eyeAng, pos, ang)
-
 	return eyePos, eyeAng
 end
 
-function SWEP:WalkBobOffset(mv, ct, ft)
-	ct = ct * 1.5
-	local x = (cos(ct * 8.4) * 1.6 * mv)
-	local z = (sin(ct * 16.8) * 0.6 * mv)
-
-	local y = ((sin(ct * 2.0) + 1) / 2) * 1.0 * mv
 	
-	local pos = Vector(
-		x,
-		-y * 2,
-		z
-	)
-
-	local ang = Angle(
-		0,
-		0,
-		0
-	)
-
-	return pos, ang
-end
-
-function SWEP:SprintBobOffset(mv, ct, ft)
-	ct = ct * 1.2
-	mv = mv * 0.65
-	local x = (cos(ct * 8.4) * 1.2 * mv)
-	local z = (sin(ct * 16.8) * 0.2 * mv)
-
-	local y = ((sin(ct * 2.0) + 1) / 2) * 1.0 * mv
-	
-	local pos = Vector(
-		x,
-		-y * 2,
-		z
-	)
-
-	local ang = Angle(
-		0,
-		0,
-		0
-	)
-
-
-
-	return pos, ang
-end
-
 function SWEP:ViewIdleOffset(eyePos, eyeAng)
 	if self.NoIdle then return eyePos, eyeAng end
 	local ct = CurTime()
