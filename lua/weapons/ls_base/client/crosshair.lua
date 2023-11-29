@@ -1,6 +1,21 @@
 SWEP.CrosshairAlpha = 1
 SWEP.CrosshairSpread = 0
 
+local function drawCirc(x, y, radius, seg)
+	local cir = {}
+
+	table.insert( cir, { x = x, y = y, u = 0.5, v = 0.5 } )
+	for i = 0, seg do
+		local a = math.rad( ( i / seg ) * -360 )
+		table.insert( cir, { x = x + math.sin( a ) * radius, y = y + math.cos( a ) * radius, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
+	end
+
+	local a = math.rad( 0 ) -- This is needed for non absolute segment counts
+	table.insert( cir, { x = x + math.sin( a ) * radius, y = y + math.cos( a ) * radius, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
+
+	surface.DrawPoly( cir )
+end
+
 function SWEP:CanDrawCrosshair()
 	if self.NoCrosshair then
 		return false
@@ -23,7 +38,7 @@ end
 
 function SWEP:GetCrosshairGap()
     local ply = self:GetOwner()
-    local base = 5 * (self.Primary.Cone * 128)
+    local base = 7 * (self.Primary.Cone * 128)
 
 	base = base * (self:IsSprinting() and (self.Spread.SprintMod or 2) * 4 or 1)
     base = base * (self:GetIronsights() and (self.Spread.IronsightsMod or 0.7) or 1)
@@ -32,14 +47,14 @@ function SWEP:GetCrosshairGap()
 end
 
 function SWEP:DoDrawCrosshair(x, y)
-	local swayAng = -self.VMSwayAngSmooth or Angle()
+	local swayAng = -(self.VMSwayAngSmooth or Angle())
 	local bobPos = self.BobPos or Vector()
 
-	x = x + swayAng.y * 6
-	y = y + swayAng.p * 6
+	x = x + swayAng.y * 12
+	y = y + swayAng.p * 12
 
-	x = x + bobPos.x * 9
-	y = y - bobPos.z * 9
+	x = x + bobPos.x * 16
+	y = y - bobPos.z * 16
 	local length = 8
 	local candraw = self:CanDrawCrosshair()
 
@@ -52,6 +67,7 @@ function SWEP:DoDrawCrosshair(x, y)
 	self.HUDCrosshairAlpha = alpha
 
 	surface.SetDrawColor(ColorAlpha(color_white, alpha))
+
     surface.DrawLine(x + gap, y, x + gap + length, y)
     surface.DrawLine(x - gap, y, x - gap - length, y)
 
