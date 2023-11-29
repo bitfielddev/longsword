@@ -32,6 +32,14 @@ function SWEP:GetCrosshairGap()
 end
 
 function SWEP:DoDrawCrosshair(x, y)
+	local swayAng = -self.VMSwayAngSmooth or Angle()
+	local bobPos = self.BobPos or Vector()
+
+	x = x + swayAng.y * 6
+	y = y + swayAng.p * 6
+
+	x = x + bobPos.x * 9
+	y = y - bobPos.z * 9
 	local length = 8
 	local candraw = self:CanDrawCrosshair()
 
@@ -40,7 +48,7 @@ function SWEP:DoDrawCrosshair(x, y)
     self.HUDCrosshairGap = gap
 
 	local newAlpha = candraw and 255 or 0
-	local alpha = Lerp(RealFrameTime() * 10, self.HUDCrosshairAlpha or newAlpha, newAlpha)
+	local alpha = Lerp(RealFrameTime() * 20, self.HUDCrosshairAlpha or newAlpha, newAlpha)
 	self.HUDCrosshairAlpha = alpha
 
 	surface.SetDrawColor(ColorAlpha(color_white, alpha))
