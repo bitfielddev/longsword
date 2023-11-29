@@ -72,20 +72,11 @@ function SWEP:PrimaryAttack()
 		self.Burst = 3
 
 		local delay = CurTime() + ((self.Primary.Delay * 3) + (self.Primary.BurstEndDelay or 0.3))
+		print(delay)
 		self:SetNextPrimaryFire(delay)
 		self:SetReloadTime(delay)
 	elseif clip >= 1 then
-		self:TakePrimaryAmmo(1)
-
-		self:ShootBullet(self.Primary.Damage, self.Primary.NumShots, self:CalculateSpread())
-
-		self:AddRecoil()
-		self:ViewPunch()
-
-		self:EmitSound(self.Primary.Sound)
-		
-		self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-		self:SetReloadTime(CurTime() + self.Primary.Delay)
+		self:Shoot()
 	else
 		if not self.NoDryFireAnim then
 			self:PlayAnim(ACT_VM_DRYFIRE)
@@ -97,6 +88,17 @@ function SWEP:PrimaryAttack()
 	end
 end
 
+function SWEP:Shoot()
+	self:TakePrimaryAmmo(1)
+
+	self:ShootBullet(self.Primary.Damage, self.Primary.NumShots, self:CalculateSpread())
+
+	self:AddRecoil()
+	self:ViewPunch()
+	
+	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
+	self:SetReloadTime(CurTime() + self.Primary.Delay)
+end
 
 function SWEP:SecondaryAttack() 
 end

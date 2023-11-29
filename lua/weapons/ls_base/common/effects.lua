@@ -53,18 +53,35 @@ function SWEP:ShouldAnimateFire()
 	return true
 end
 
+function SWEP:GetFireAnimation()
+	if self:GetIronsights() then
+		return self.IronsightsAnimation or ACT_VM_PRIMARYATTACK_1
+	end
+
+	if self.FireAnims then
+		return self.FireAnims[math.random(1, #self.FireAnims)]
+	end
+
+	return self.FireAnim or ACT_VM_PRIMARYATTACK
+end
+
 function SWEP:ShootEffects()
+	local ply = self:GetOwner()
+
 	if not self:GetIronsights() or self:ShouldAnimateFire() then
-		self:PlayAnim(self:GetIronsights() and (self.IronsightsAnimation or ACT_VM_PRIMARYATTACK_1) or (self.FireAnim or ACT_VM_PRIMARYATTACK))
+		local anim = self:GetFireAnimation()
+		self:PlayAnim(anim)
 		self:QueueIdle()
 	end
+
+	self:PlayFireSound()
 
 	if CLIENT then
 		if self:ShouldResetCustomRecoil() and (game.SinglePlayer() or IsFirstTimePredicted()) then
 			self:ResetCustomRecoil()
 		end
 
-		local isThirdperson = hook.Run("ShouldDrawLocalPlayer", self.Owner)
+		local isThirdperson = ply:ShouldDrawLocalPlayer()
 
 		if not isThirdperson then
 			local vm = self.Owner:GetViewModel()
@@ -81,14 +98,6 @@ function SWEP:ShootEffects()
 				ef:SetScale(self.IronsightsMuzzleFlashScale or 1)
 
 				util.Effect(self.IronsightsMuzzleFlash or "ls_muzzleflash", ef)
-			end
-		end
-	else
-		for _, ply in pairs(player.GetAll()) do
-			if (ply:GetPos() - self:GetOwner():GetPos()):LengthSqr() < (20000 ^ 2) then
-				net.Start("longswordEcho")
-				net.WriteUInt(ply:EntIndex(), 32)
-				net.Send(ply)
 			end
 		end
 	end
