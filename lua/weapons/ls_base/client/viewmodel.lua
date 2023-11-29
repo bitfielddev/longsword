@@ -68,6 +68,7 @@ function SWEP:CalcViewBob(eyePos, eyeAng)
 	self.VMRoll = rdSmooth
 	eyeAng.r = eyeAng.r + rdSmooth
 	
+
 	return eyePos, eyeAng
 end
 
@@ -84,6 +85,21 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 
 	v0 = cos(ct * 7.0) * 0.7 * mv
 	v1 = sin(ct * 14.0) * 0.35 * mv
+
+	local pos = Vector(
+		v0,
+		0,
+		v1
+	)
+
+	local ang = Angle(
+		0,
+		0,
+		0
+	)
+
+	self.BobPos = pos
+	self.BobAng = ang
 
 	eyePos, eyeAng = longsword.math.translate(
 		eyePos, eyeAng,
@@ -144,6 +160,7 @@ function SWEP:SwayThink()
 	end
 	dist = dist * 4
 	dist = dist * (self.SwayMul or 1)
+
     self.VMSwayAng = LerpAngle(ft * 32, self.VMSwayAng or dist, dist)
     self.VMSwayLastAng = eyeAng
 end
