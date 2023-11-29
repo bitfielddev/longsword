@@ -27,6 +27,7 @@ surface.CreateFont("Longsword.Info", {
 	antialias = true
 })
 
+
 function SWEP:DrawAttachmentHUD(attID, hdr)
 	local ft = RealFrameTime()
 

@@ -12,9 +12,21 @@ end
 function SWEP:GetOffset()
 	if self:GetReloading() then return end
 
-	if ( self.LoweredPos and self:IsSprinting() ) or self:GetLowered() then
-		return self.LoweredPos or Vector(3.5, -2, -2), self.LoweredAng or Angle(-16, 32, -16)
+	local pos, ang = Vector(), Angle()
+
+	local centered = self:Centered()
+	if centered and not self:GetIronsights() then
+		local cpos, cang = self:GetCenterPos()
+		pos:Add(cpos)
+		ang:Add(cang)
 	end
+
+	if ( self.LoweredPos and self:IsSprinting() ) or self:GetLowered() then
+		pos:Add(self.LoweredPos or Vector(3.5, -2, -2))
+		ang:Add(self.LoweredAng or Angle(-16, 32, -16))
+	end
+
+	return pos, ang
 end
 
 SWEP.ViewModelPos = Vector( 0, 0, 0 )
@@ -158,7 +170,7 @@ function SWEP:SwayThink()
 		dist.y = -dist.y * 0.55
 		dist.r = -dist.r * 0.55
 	end
-	dist = dist * 4
+	dist = dist * 2
 	dist = dist * (self.SwayMul or 1)
 
     self.VMSwayAng = LerpAngle(ft * 32, self.VMSwayAng or dist, dist)
@@ -224,6 +236,40 @@ function SWEP:ViewCrouchOffset(eyePos, eyeAng)
 	return longsword.math.translate(eyePos, eyeAng, pos, ang)
 end
 
+function SWEP:Centered()
+	local cv = GetConVar("longsword_centered")
+	if cv and cv:GetBool() then
+		return true
+	end
+
+	return false
+end
+
+
+function SWEP:GetCenterPos()
+	local ft = RealFrameTime()
+
+	local pos, ang
+
+	if not self.CenteredPos then
+		pos = Vector(
+			-5,
+			0,
+			-2
+		)
+	else
+		pos = self.CenteredPos
+	end
+
+	if not self.CenteredAng then
+		ang = Angle()
+	else
+		ang = self.CenteredAng
+	end
+
+	return pos, ang
+end
+
 function SWEP:GetViewModelPosition( pos, ang )
 	local vm = self:GetOwner():GetViewModel()
 	local muz = self:LookupAttachment(self.MuzzleAttachment or "muzzle")
@@ -233,6 +279,7 @@ function SWEP:GetViewModelPosition( pos, ang )
 	att.Ang = vm:WorldToLocalAngles(att.Ang)
 
 	self.MuzzleData = att
+
 
 	ang:RotateAroundAxis( ang:Right(), self.ViewModelAngle.p )
 	ang:RotateAroundAxis( ang:Up(), self.ViewModelAngle.y )
