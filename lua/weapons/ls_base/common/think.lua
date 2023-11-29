@@ -46,14 +46,7 @@ end
 
 function SWEP:BurstThink()
 	if self.Burst and (self.nextBurst or 0) < CurTime() then
-		self:TakePrimaryAmmo(1)
-
-		self:ShootBullet(self.Primary.Damage, self.Primary.NumShots, self:CalculateSpread())
-
-		self:AddRecoil()
-		self:ViewPunch()
-
-		self:EmitSound(self.Primary.Sound)
+		self:Shoot()
 
 		self.Burst = self.Burst - 1
 

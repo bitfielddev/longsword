@@ -7,8 +7,8 @@ local appr = math.Approach
 local zero = Vector()
 local zeroAng = Angle()
 
-SWEP.IronsightsMidAng = Angle(6, 0, 0)
-SWEP.IronsightsMid = Vector(-4, 0, -3)
+SWEP.IronsightsMidAng = Angle(6, 0, 8)
+SWEP.IronsightsMid = Vector(-0.8, 0, -3)
 
 function SWEP:GetRecoilMultiplier()
 	return (self.Recoil and self.Recoil.VisualMultiplier or self.IronsightsRecoilVisualMultiplier) or 1
