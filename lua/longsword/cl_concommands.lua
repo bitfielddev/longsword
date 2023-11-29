@@ -1,10 +1,10 @@
-concommand.Add("ls_debug_attachments", function()
+concommand.Add("longsword_debug_attachments", function()
     local vm = LocalPlayer():GetViewModel()
 
     PrintTable(vm:GetAttachments())
 end)
 
-concommand.Add("ls_debug_bones", function()
+concommand.Add("longsword_debug_bones", function()
     local vm = LocalPlayer():GetViewModel()
 
     for i = 1, vm:GetBoneCount() do

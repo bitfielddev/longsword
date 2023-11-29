@@ -40,13 +40,11 @@ end
 
 local math, sin, cos, approach = math, math.sin, math.cos, math.Approach
 
-function SWEP:ViewBob(eyePos, eyeAng)
+function SWEP:CalcViewBob(eyePos, eyeAng)
 	local pos, ang
 	local ct = CurTime()
 	local ft = math.Clamp(RealFrameTime(), 0, 1)
 	local ft8 = ft * 8
-
-	local spr = self:IsSprinting()
 
 	local ovel = self.Owner:GetVelocity()
 	local move = Vector(ovel.x, ovel.y, 0)
@@ -62,35 +60,45 @@ function SWEP:ViewBob(eyePos, eyeAng)
 	if self:GetIronsights() then
 		mv = mv * 0.2
 	end
-	
-	if spr then
-		ct = ct * 1.25
-		mv = mv * 0.5
-	end
 
-	-- viewbob code
-
-	local p0 = sin(ct * 4.0) * 1.0 * mv
-	local p1 = cos(ct * 6.0) * 3.0 * mv
-
-	local point = Vector(12 + (p1 * 4), 0, -12 * p0)
-
-	local p0 = sin(ct * 14.0) * 3.0 * mv
-	local p1 = cos(ct * 7.0) * 4.5 * mv
-
-	local ang = Angle(p0, p1, 0) * 1.2
-
-	eyePos, eyeAng = longsword.math.rotateAround(eyePos, eyeAng, point, ang)
-
-	-- end of viewbob code
-
-
+	eyePos, eyeAng = self:ViewBob(eyePos, eyeAng, mv, ct, ft)
 
 	local rd = move:Dot(self:GetOwner():GetRight()) * 0.05 * (self:GetIronsights() and 0.4 or 1)
 	local rdSmooth = Lerp(ft * 4, self.VMRoll or rd, rd)
 	self.VMRoll = rdSmooth
 	eyeAng.r = eyeAng.r + rdSmooth
 	
+	return eyePos, eyeAng
+end
+
+function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
+	local spr = self:IsSprinting()
+
+	if spr then
+		ct = ct * 1.5
+	else
+		mv = mv * 2.0
+	end
+
+	local p0, p1
+
+	v0 = cos(ct * 7.0) * 0.7 * mv
+	v1 = sin(ct * 14.0) * 0.35 * mv
+
+	eyePos, eyeAng = longsword.math.translate(
+		eyePos, eyeAng,
+		Vector(
+			v0,
+			0,
+			v1
+		),
+		Angle(
+			0,
+			0,
+			0
+		)
+	)
+
 	return eyePos, eyeAng
 end
 
@@ -118,16 +126,23 @@ function SWEP:SwayThink()
 	local lastAng = self.VMSwayLastAng or eyeAng
 	local dist = eyeAng - lastAng
 
+	local swayCV = GetConVar("longsword_invertsway")
+
+	local invertSway = self.SwayDrag
+	if swayCV and swayCV:GetBool() then
+		invertSway = swayCV:GetBool()
+	end
+
 	dist.p = -math.Clamp(dist.p, -5, 5)
     dist.y = math.Clamp(dist.y, -5, 5)
     dist.r = math.Clamp(dist.r, -5, 5)
 
-	if self.SwayMode == "drag" then
+	if invertSway then
 		dist.p = -dist.p * 0.55
 		dist.y = -dist.y * 0.55
 		dist.r = -dist.r * 0.55
 	end
-	dist = dist * 2
+	dist = dist * 4
 	dist = dist * (self.SwayMul or 1)
     self.VMSwayAng = LerpAngle(ft * 32, self.VMSwayAng or dist, dist)
     self.VMSwayLastAng = eyeAng
@@ -138,7 +153,7 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
     local swayRaw = self.VMSwayAng or Angle()
 	local sway = 1.4 * (self:GetIronsights() and 0.2 or 1)
 
-    swayRaw.r = (-(swayRaw.y * 0.4) + swayRaw.p) * 1.2 * sway
+    swayRaw.r = (-(swayRaw.y * 0.4)) * 1.2 * sway
 
     self.VMSwayAngSmooth = LerpAngle(ft * 1.8, self.VMSwayAngSmooth or swayRaw, swayRaw)
     local smoothAng = self.VMSwayAngSmooth * 2
@@ -210,7 +225,7 @@ function SWEP:GetViewModelPosition( pos, ang )
 	pos = pos + self.ViewModelPos.y * ang:Forward()
 	pos = pos + self.ViewModelPos.z * ang:Up()
 
-	pos, ang = self:ViewBob(pos, ang)
+	pos, ang = self:CalcViewBob(pos, ang)
 	pos, ang = self:ViewSwayOffset(pos, ang)
 	pos, ang = self:ViewIdleOffset(pos, ang)
 	pos, ang = self:ViewCrouchOffset(pos, ang)
@@ -246,7 +261,7 @@ SWEP.FOVMultiplier = 1
 SWEP.LastFOVUpdate = 0 -- gets called many times per frame... weird.
 function SWEP:TranslateFOV(fov)
 	if self.LastFOVUpdate < CurTime() then
-		self.FOVMultiplier = Lerp(RealFrameTime() * 15, self.FOVMultiplier or 0, self:GetViewFOV() or 1)
+		self.FOVMultiplier = Lerp(RealFrameTime() * 4, self.FOVMultiplier or 0, self:GetViewFOV() or 1)
 		self.LastFOVUpdate = CurTime()
 	end
 

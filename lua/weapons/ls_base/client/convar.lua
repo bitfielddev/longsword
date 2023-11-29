@@ -9,3 +9,7 @@ if not ConVarExists("longsword_debug") then
 		shadow = true
 	})
 end
+
+if not ConVarExists("longsword_invertsway") then
+	CreateClientConVar("longsword_invertsway", "0", true, false, "If the sway should be inverted on ALL weapons.", 0, 1)
+end

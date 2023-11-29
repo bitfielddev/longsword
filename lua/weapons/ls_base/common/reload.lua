@@ -23,7 +23,7 @@ function SWEP:Reload()
 
 	-- self:EmitWeaponSound("LS_Generic.Reload")
 
-	if self.WeaponType == WEAPON_SHOTGUN then
+	if self.Shotgun then
 		return self:ReloadShotgun()
 	end
 

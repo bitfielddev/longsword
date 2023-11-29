@@ -91,7 +91,7 @@ function SWEP:OnRemove()
 end
 
 function SWEP:ReloadThink()
-	if self.WeaponType == WEAPON_SHOTGUN then
+	if self.Shotgun == true then
 		self:ShotgunReloadThink()
 	end
 	if self:GetReloadTime() < CurTime() then 

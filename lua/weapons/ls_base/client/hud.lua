@@ -5,6 +5,28 @@ local LocalPlayer = LocalPlayer
 
 local black = Color(0, 0, 0, 255)
 
+
+surface.CreateFont("Longsword.Title", {
+	font = "Roboto Bold",
+	size = 43,
+	weight = 300,
+	antialias = true
+})
+
+surface.CreateFont("Longsword.Version", {
+	font = "Roboto Light",
+	size = 22,
+	weight = 200,
+	antialias = true
+})
+
+surface.CreateFont("Longsword.Info", {
+	font = "Cascadia Code",
+	size = 20,
+	weight = 200,
+	antialias = true
+})
+
 function SWEP:DrawAttachmentHUD(attID, hdr)
 	local ft = RealFrameTime()
 
@@ -85,6 +107,51 @@ function SWEP:ScopedIn()
 	end
 end
 
+local yInc = 20
+
+function SWEP:DrawDebugHUD()
+	-- Title
+	surface.SetFont("Longsword.Title")
+	surface.SetTextColor(debugCol)
+	surface.SetTextPos(60, 60)
+	surface.DrawText("LONGSWORD")
+
+	surface.SetFont("Longsword.Version")
+	surface.SetTextColor(200, 200, 200, 255)
+	surface.SetTextPos(60, 94)
+	surface.DrawText("v" .. longsword.version)
+
+	-- Info
+
+	local y = 120
+
+	surface.SetFont("Longsword.Info")
+	surface.SetTextColor(255, 255, 255, 255)
+	surface.SetTextPos(60, y)
+	surface.DrawText("BDMG: " .. self.Primary.Damage)
+
+	y = y + yInc
+
+	surface.SetFont("Longsword.Info")
+	surface.SetTextColor(255, 255, 255, 255)
+	surface.SetTextPos(60, y)
+	surface.DrawText("Ironsights: " .. math.SnapTo(self.IronsightsFrac or 0, 0.005))
+
+	y = y + yInc
+
+	surface.SetFont("Longsword.Info")
+	surface.SetTextColor(255, 255, 255, 255)
+	surface.SetTextPos(60, y)
+	surface.DrawText("Crouch: " .. math.SnapTo(self.VMCrouchLerp or 0, 0.005))
+
+	y = y + yInc
+
+	surface.SetFont("Longsword.Info")
+	surface.SetTextColor(255, 255, 255, 255)
+	surface.SetTextPos(60, y)
+	surface.DrawText("Last Spread: " .. (self.LastSpread or 0))
+end
+
 function SWEP:DrawHUD()
 	self.EquippedAttachments = self.EquippedAttachments or {}
 	for attID, _ in pairs(self.EquippedAttachments) do
@@ -93,64 +160,11 @@ function SWEP:DrawHUD()
 			self:DrawVMAttachmentScope(attID)
 		end
 	end
-	local debugMode = GetConVar("longsword_debug")
 
-	if (impulse_DevHud or debugMode:GetBool()) then
-		local scrW = ScrW()
-		local scrH = ScrH()
-		local dev = GetConVar("developer"):GetInt()
+	local isDebug = GetConVar("longsword_debug")
 
-		if dev == 0 then
-			print("[longsword] Enabling 'developer 1'")
-			LocalPlayer():ConCommand("developer 1")
-		end
-
-		surface.SetFont("lsDebug")
-		surface.SetTextColor(debugCol)
-
-		surface.SetTextPos(0, 0)
-		surface.DrawText("[LONGSWORD DEBUG MODE ENABLED]")
-
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) - 20)
-		surface.DrawText((self.PrintName or "PrintName ERROR").." [BDMG: "..(self.Primary.Damage or "?")..", RPM: "..(60 / (self.Primary.Delay or 0))..", SHOTS: "..(self.Primary.NumShots or "?").."]")
-
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2))
-		surface.DrawText("Recoil: "..self:GetRecoil())
-
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 20)
-		surface.DrawText("Ironsights Recoil: "..self:GetIronsightsRecoil())
-
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 40)
-		surface.DrawText("Last Spread: "..(self.LastSpread or "[SHOOT WEAPON]"))
-
-
-		if self.LastSpread then
-			local perc = (self.LastSpread / self.Primary.Cone)
-			surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 60)
-			surface.SetTextColor(Color(255 * perc, 255 * (1 - perc), 0, 200))
-			surface.DrawText((perc * 100).."% of Base Cone")
-			surface.SetTextColor(debugCol)
-		end
-
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 90)
-		surface.DrawText("Is Ironsights: "..tostring(self:GetIronsights()))
-
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 110)
-		surface.DrawText("Is Bursting: "..tostring(self:GetBursting()))
-
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 130)
-		surface.DrawText("Is Reloading: "..tostring(self:GetReloading()))
-
-		local ns = (self:GetNextPrimaryFire() or 0) - CurTime()
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 150)
-		surface.DrawText("Next Shot: "..(ns > 0 and ns or "CLEAR"))
-
-		local attach = self:GetCurAttachment()
-
-		if attach and attach != "" then
-			surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 180)
-			surface.DrawText("Attachment: "..self:GetCurAttachment())
-		end
+	if isDebug:GetBool() then
+		self:DrawDebugHUD()
 	end
 
 	local hdr = (GetConVar("mat_hdr_level"):GetInt() or 0) != 0

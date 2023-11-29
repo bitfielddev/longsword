@@ -1,12 +1,9 @@
 longsword = longsword or {}
+longsword.version = "2.1.0"
 
 longsword.CLIENT = 1
 longsword.SERVER = 2
 longsword.SHARED = 3
-
-WEAPON_SHOTGUN = 1
-WEAPON_MELEE = 2
-WEAPON_PROJECTILE = 3
 
 function RPM(rpm)
 	return 60 / rpm
