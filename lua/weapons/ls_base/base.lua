@@ -214,3 +214,5 @@ function SWEP:Holster(w)
 	
 	return true
 end
+
+print("[longsword] Longsword weapon base loaded. Version " .. longsword.version .. ". Copyright 2019 vin")
