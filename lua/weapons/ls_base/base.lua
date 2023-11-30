@@ -176,6 +176,13 @@ function SWEP:Deploy()
 
 	end
 
+	if self.PlayerSpeedMultiplier then
+		local ply = self:GetOwner()
+		local oldSpeed = ply:GetWalkSpeed()
+		ply.lsOldWalkSpeed = oldSpeed
+		ply:SetWalkSpeed(oldSpeed * self.PlayerSpeedMultiplier)
+	end
+
 	self:SetLowered(false)
 	self:SetHoldType(self.HoldType)
 
@@ -205,6 +212,13 @@ function SWEP:Holster(w)
 			if self.Owner == LocalPlayer() then
 				self.Owner:GetViewModel():SetMaterial("")
 			end
+		end
+	end
+
+	if self.PlayerSpeedMultiplier then
+		local oldSpeed = self:GetOwner().lsOldWalkSpeed
+		if oldSpeed != self:GetOwner():GetWalkSpeed() then
+			self:GetOwner():SetWalkSpeed(oldSpeed)
 		end
 	end
 
