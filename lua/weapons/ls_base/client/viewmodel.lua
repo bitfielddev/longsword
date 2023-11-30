@@ -111,7 +111,7 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	)
 	-- Second
 	local v0 = sin(ct * 7.5) * 1.5 * mv
-	local r = sin(ct * 14.5) * 2 * mv
+	local r = sin(ct * 14.5) * 1.3 * mv
 
 	eyePos, eyeAng = longsword.math.rotateAround(
 		eyePos,
