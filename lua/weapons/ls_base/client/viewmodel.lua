@@ -63,7 +63,7 @@ function SWEP:CalcViewBob(eyePos, eyeAng)
 	local movement = move:LengthSqr()
 	local mvRaw = math.Clamp(movement / self.Owner:GetRunSpeed() ^ 2, 0, 1)
 
-	local mv = Lerp(ft * 4, self.VMLastMV or mvRaw, mvRaw)
+	local mv = Lerp(ft * 3.2, self.VMLastMV or mvRaw, mvRaw)
 	self.VMLastMV = mv
 
 	local vel = move:GetNormalized()
@@ -161,9 +161,9 @@ function SWEP:SwayThink()
     dist.r = math.Clamp(dist.r, -5, 5)
 
 	if invertSway then
-		dist.p = -dist.p * 0.55
-		dist.y = -dist.y * 0.55
-		dist.r = -dist.r * 0.55
+		dist.p = -dist.p
+		dist.y = -dist.y
+		dist.r = -dist.r
 	end
 	dist = dist * 2
 	dist = dist * (self.SwayMul or 1)

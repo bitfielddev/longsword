@@ -36,7 +36,7 @@ function SWEP:ResetCustomRecoil()
 	self._CustomRecoil.Value = 1
 	self._CustomRecoil.PitchValue = 1
 	self._CustomRecoil.RollValue = 1
-	self._CustomRecoil.RollRandom = math.Rand(12, 24)
+	self._CustomRecoil.RollRandom = math.Rand(4, 12)
 end
 
 function SWEP:ShouldAnimateFire()
