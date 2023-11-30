@@ -92,41 +92,36 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	else
 		mv = mv * 2.0
 	end
+	
+	local muzPos = (self.MuzzleData or {}).Pos or Vector()
+	
+	-- First
+	local v0 = cos(ct * 7.5) * 1.2 * mv
+	local v1 = sin(ct * 15.0) * 0.6 * mv
 
-	local p0, p1
-
-	v0 = cos(ct * 7.0) * 0.7 * mv
-	v1 = sin(ct * 14.0) * 0.35 * mv
-
-	local pos = Vector(
-		v0,
-		0,
-		v1
-	)
-
-	local ang = Angle(
-		0,
-		0,
-		0
-	)
-
-	self.BobPos = pos
-	self.BobAng = ang
-
-	eyePos, eyeAng = longsword.math.translate(
-		eyePos, eyeAng,
-		Vector(
-			v0,
-			0,
-			v1
-		),
+	eyePos, eyeAng = longsword.math.rotateAround(
+		eyePos,
+		eyeAng,
+		muzPos,
 		Angle(
-			0,
-			0,
+			(mv * 1.5) - v1,
+			v0,
 			0
 		)
 	)
+	-- Second
+	local v0 = sin(ct * 7.5) * 1.5 * mv
 
+	eyePos, eyeAng = longsword.math.rotateAround(
+		eyePos,
+		eyeAng,
+		vector_origin,
+		Angle(
+			0,
+			-v0,
+			0
+		)
+	)
 	return eyePos, eyeAng
 end
 

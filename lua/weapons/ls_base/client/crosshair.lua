@@ -48,13 +48,10 @@ end
 
 function SWEP:DoDrawCrosshair(x, y)
 	local swayAng = -(self.VMSwayAngSmooth or Angle())
-	local bobPos = self.BobPos or Vector()
 
 	x = x + swayAng.y * 12
 	y = y + swayAng.p * 12
 
-	x = x + bobPos.x * 16
-	y = y - bobPos.z * 16
 	local length = 8
 	local candraw = self:CanDrawCrosshair()
 
