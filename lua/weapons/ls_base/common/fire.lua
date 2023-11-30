@@ -72,7 +72,6 @@ function SWEP:PrimaryAttack()
 		self.Burst = 3
 
 		local delay = CurTime() + ((self.Primary.Delay * 3) + (self.Primary.BurstEndDelay or 0.3))
-		print(delay)
 		self:SetNextPrimaryFire(delay)
 		self:SetReloadTime(delay)
 	elseif clip >= 1 then

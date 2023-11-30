@@ -27,7 +27,7 @@ function SWEP:DoIronsightsRecoil()
 	local rollVal = (recoilData.RollValue or 0) * (recoilInfo.RollMultiplier or 1) * self:GetRecoilMultiplier()
 	local roll = math.cos(ct * (recoilData.RollRandom or 1)) * 1.2 * rollVal
 
-	local pitch = (recoilData.PitchValue or 0) * (recoilInfo.PitchMultiplier or 1) * self:GetRecoilMultiplier() + roll * 0.4 * re
+	local pitch = (recoilData.PitchValue or 0) * (recoilInfo.PitchMultiplier or 1) * self:GetRecoilMultiplier()
 
 	local recoilPos = Vector(
 		re * 0.5 * (recoilData.YawValue or 1),
