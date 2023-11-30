@@ -272,13 +272,15 @@ end
 
 function SWEP:GetViewModelPosition( pos, ang )
 	local vm = self:GetOwner():GetViewModel()
-	local muz = self:LookupAttachment(self.MuzzleAttachment or "muzzle")
-	local att = (muz > 0) and self:GetAttachment(muz) or { Pos = vm:GetPos(), Ang = vm:GetAngles() }
-
-	att.Pos = vm:WorldToLocal(att.Pos)
-	att.Ang = vm:WorldToLocalAngles(att.Ang)
-
-	self.MuzzleData = att
+	if IsFirstTimePredicted() or game.SinglePlayer() then
+		local muz = self:LookupAttachment(self.MuzzleAttachment or "muzzle")
+		local att = (muz > 0) and self:GetAttachment(muz) or { Pos = vm:GetPos(), Ang = vm:GetAngles() }
+	
+		att.Pos = vm:WorldToLocal(att.Pos)
+		att.Ang = vm:WorldToLocalAngles(att.Ang)
+	
+		self.MuzzleData = att
+	end
 
 
 	ang:RotateAroundAxis( ang:Right(), self.ViewModelAngle.p )
