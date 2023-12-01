@@ -21,6 +21,10 @@ function SWEP:CanDrawCrosshair()
 		return false
 	end
 	
+	if self:ScopedIn() then
+		return false
+	end
+
 	if hook.Run("ShouldDrawLocalPlayer", self.Owner) then
 		return true	
 	end
@@ -56,7 +60,7 @@ function SWEP:DoDrawCrosshair(x, y)
 	local candraw = self:CanDrawCrosshair()
 
     local newGap = self:GetCrosshairGap()
-    local gap = Lerp(RealFrameTime() * 20, self.HUDCrosshairGap or newGap, newGap)
+    local gap = Lerp(RealFrameTime() * 8, self.HUDCrosshairGap or newGap, newGap)
     self.HUDCrosshairGap = gap
 
 	local newAlpha = candraw and 255 or 0

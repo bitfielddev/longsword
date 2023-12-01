@@ -30,10 +30,12 @@ sound.Add({
 
 sound.Add({
     name = "LS_Generic.ADSIn",
-    sound = { "weapons/ins2/uni/uni_ads_in_01.wav", "weapons/ins2/uni/uni_ads_in_02.wav", "weapons/ins2/uni/uni_ads_in_03.wav", "weapons/ins2/uni/uni_ads_in_04.wav", "weapons/ins2/uni/uni_ads_in_05.wav", "weapons/ins2/uni/uni_ads_in_06.wav" }
+    sound = { "weapons/ins2/uni/uni_ads_in_01.wav", "weapons/ins2/uni/uni_ads_in_02.wav", "weapons/ins2/uni/uni_ads_in_03.wav", "weapons/ins2/uni/uni_ads_in_04.wav", "weapons/ins2/uni/uni_ads_in_05.wav", "weapons/ins2/uni/uni_ads_in_06.wav" },
+    pitch = 97
 })
 
 sound.Add({
     name = "LS_Generic.ADSOut",
-    sound = "weapons/ins2/uni/uni_ads_out_01.wav"
+    sound = "weapons/ins2/uni/uni_ads_out_01.wav",
+    pitch = 97
 })

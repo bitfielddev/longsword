@@ -93,8 +93,11 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 		mv = mv * 2.0
 	end
 	
-	local muzPos = (self.MuzzleData or {}).Pos or Vector()
-	
+	local muz = self.MuzzleData or {}
+
+	local muzPos = muz.Pos or Vector()
+	local muzAng = muz.Ang or Angle()
+
 	-- First
 	local v0 = cos(ct * 7.5) * 1.2 * mv
 	local v1 = sin(ct * 15.0) * 0.6 * mv
@@ -133,8 +136,13 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 			0,
 			0
 		),
-		Angle()
+		Angle(
+			0,
+			0,
+			0
+		)
 	)
+
 	return eyePos, eyeAng
 end
 
