@@ -51,11 +51,6 @@ function SWEP:GetCrosshairGap()
 end
 
 function SWEP:DoDrawCrosshair(x, y)
-	local swayAng = -(self.VMSwayAngSmooth or Angle())
-
-	x = x + swayAng.y * 12
-	y = y + swayAng.p * 12
-
 	local length = 8
 	local candraw = self:CanDrawCrosshair()
 
