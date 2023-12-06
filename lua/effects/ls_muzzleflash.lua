@@ -26,7 +26,7 @@ function EFFECT:Init( data )
     end
 
     if not wep.NoFlashShock then
-        local size = self.MuzzleFlashShock or "small"
+        local size = wep.MuzzleFlashShock or "small"
         local name = "muzzle_smoke_shock_" .. size
 
         ParticleEffectAttach(
