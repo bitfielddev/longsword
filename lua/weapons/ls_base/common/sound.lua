@@ -11,7 +11,6 @@ function SWEP:PlayFireSound()
 
     if isvector(hitpos) then
         local zdist = hitpos.z - trace.start.z
-        print(zdist)
         if zdist < 200 then
             dsp = 1
         elseif zdist > 200 and zdist < 1200 then

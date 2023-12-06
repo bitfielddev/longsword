@@ -15,5 +15,5 @@ if not ConVarExists("longsword_invertsway") then
 end
 
 if not ConVarExists("longsword_centered") then
-	CreateClientConVar("longsword_centered", "0", true, false, "If the viewmodel should be centered.", "0", "1")
+	CreateClientConVar("longsword_centered", "0", true, false, "If the viewmodel should be centered.", 0, 1)
 end
