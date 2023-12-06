@@ -189,14 +189,18 @@ function SWEP:DrawVMElement(data)
     local cs = data._CSModel
 
     local bone = vm:LookupBone(data.Bone)
-	if not bone then
-		return
+	local pos, ang
+	if bone then
+		local m = vm:GetBoneMatrix(bone)
+		if IsValid(m) then
+			pos, ang = m:GetTranslation(), m:GetAngles()
+		else
+			pos, ang = vm:GetPos(), vm:GetAngles()
+		end
+	else
+		pos, ang = vm:GetPos(), vm:GetAngles()
 	end
-	
-	local m = vm:GetBoneMatrix(bone)
 
-	local pos, ang = m:GetTranslation(), m:GetAngles()
-	
 	cs:SetPos(pos + ang:Forward() * data.Pos.x + ang:Right() * data.Pos.y + ang:Up() * data.Pos.z)
 	ang:RotateAroundAxis(ang:Up(), data.Ang.y)
 	ang:RotateAroundAxis(ang:Right(), data.Ang.p)
