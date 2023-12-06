@@ -184,6 +184,10 @@ function SWEP:DrawVMElement(data)
 		if data.BoneMerge then
 			cs:AddEffects(EF_BONEMERGE)
 		end
+
+		if data.Scale then
+			cs:SetModelScale(data.Scale)
+		end
     end
 
     local cs = data._CSModel

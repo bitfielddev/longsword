@@ -58,6 +58,10 @@ function SWEP:GetFireAnimation()
 		return self.IronsightsAnimation or ACT_VM_PRIMARYATTACK_1
 	end
 
+	if self:Clip1() == 0 and self.DoLastFireAnim then
+		return self.LastFireAnim or ACT_VM_PRIMARYATTACK_EMPTY
+	end
+
 	if self.FireAnims then
 		return self.FireAnims[math.random(1, #self.FireAnims)]
 	end
