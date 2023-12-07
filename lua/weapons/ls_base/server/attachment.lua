@@ -1,4 +1,7 @@
-function SWEP:GiveAttachment(id)
+local wepMeta = FindMetaTable("Weapon")
+
+function wepMeta:GiveAttachment(id)
+    if not self.IsLongsword then return end
     self.EquippedAttachments = self.EquippedAttachments or {}
     self.EquippedAttachments[id] = true
     
@@ -10,7 +13,8 @@ function SWEP:GiveAttachment(id)
     net.Broadcast()
 end
 
-function SWEP:TakeAttachment(id)
+function wepMeta:TakeAttachment(id)
+    if not self.IsLongsword then return end
     self.EquippedAttachments = self.EquippedAttachments or {}
     self.EquippedAttachments[id] = nil
 
