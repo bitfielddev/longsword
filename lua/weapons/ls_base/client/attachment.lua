@@ -1,3 +1,5 @@
+local wepMeta = FindMetaTable("Weapon")
+
 -- https://github.com/Lexicality/stencil-tutorial/blob/master/lua/stencil_tutorial/09_advanced_masks.lua
 -- this prevents everything except the specified entity to draw (i think idfk)
 function maskEntity(ent)
@@ -24,7 +26,9 @@ function unmaskEntity(ent)
 	render.SetStencilEnable(false)
 end
 
-function SWEP:GiveAttachment(attID)
+function wepMeta:GiveAttachment(attID)
+	if not self.IsLongsword then return end
+
 	local attData = self.Attachments[attID]
 	if not attData then return end
 
@@ -34,7 +38,9 @@ function SWEP:GiveAttachment(attID)
 	self:ProcessAttachmentAdd(attID)
 end
 
-function SWEP:TakeAttachment(attID)
+function wepMeta:TakeAttachment(attID)
+	if not self.IsLongsword then return end
+
 	local attData = self.Attachments[attID]
 	if not attData then return end
 

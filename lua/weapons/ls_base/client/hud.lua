@@ -31,10 +31,11 @@ function SWEP:DrawAttachmentHUD(attID, hdr)
 	local ft = RealFrameTime()
 
     local data = self.Attachments[attID]
-    if not data then return end
+    if not data or data.Behaviour != "sniperscope" then return end
 
 	if data.Scope then
 		self:DrawVMAttachmentScope(attID)
+		return
 	end
 
 	if not self:GetIronsights() then
