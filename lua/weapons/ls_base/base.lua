@@ -70,7 +70,11 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("Float", 4, "NextIdle")
 
 	if self.ExtraDataTables then
-		self.ExtraDataTables(self)
+		self:ExtraDataTables({
+			["Bool"] = 4,
+			["String"] = 1,
+			["Float"] = 5
+		})
 	end
 end
 
