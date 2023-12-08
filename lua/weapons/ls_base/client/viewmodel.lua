@@ -333,7 +333,6 @@ end
 
 function SWEP:GetViewFOV()
 	if self:ScopedIn() then
-		print("j")
 		return self.FOVScoped or 1
 	end
 
