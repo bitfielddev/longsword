@@ -10,7 +10,6 @@ function SWEP:PreDrawViewModel(vm)
 end
 
 function SWEP:GetOffset()
-	if self:GetReloading() then return end
 
 	local pos, ang = Vector(), Angle()
 
@@ -20,6 +19,10 @@ function SWEP:GetOffset()
 		pos:Add(cpos)
 		ang:Add(cang)
 	end
+
+	if self:GetReloading() then return pos, ang end
+
+
 
 	if ( self.LoweredPos and self:IsSprinting() ) or self:GetLowered() then
 		pos:Add(self.LoweredPos or Vector(3.5, -2, -2))
@@ -329,13 +332,15 @@ function SWEP:GetViewModelPosition( pos, ang )
 end
 
 function SWEP:GetViewFOV()
+	if self:ScopedIn() then
+		print("j")
+		return self.FOVScoped or 1
+	end
+
 	if self:GetIronsights() and self.IronsightsFOV then
 		return self.IronsightsFOV
 	end
 
-	if self:ScopedIn() then
-		return self.FOVScoped or 1
-	end
 
 	return 1
 end
