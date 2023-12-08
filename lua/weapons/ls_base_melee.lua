@@ -32,9 +32,9 @@ function SWEP:PrimaryAttack()
 	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
 	if self.DoFireAnim then
-		self:PlayAnim(ACT_VM_PRIMARYATTACK)
+		self:PlayAnim(self.HitAnim or ACT_VM_MISSCENTER)
 	else
-		self:SendWeaponAnim(ACT_VM_HITCENTER)
+		self:PlayAnim(self.HitAnim or ACT_VM_MISSCENTER)
 	end
 	
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
