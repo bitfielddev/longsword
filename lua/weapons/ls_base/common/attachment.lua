@@ -22,6 +22,10 @@ function SWEP:ProcessAttachmentAdd(attID)
             end
         end
     end
+
+    if data.ModSetup then
+        data.ModSetup(self)
+    end
 end
 
 function SWEP:ProcessAttachmentRemove(attID)
@@ -34,5 +38,9 @@ function SWEP:ProcessAttachmentRemove(attID)
         end
 
         data._BaseValues = {}
+    end
+
+    if data.ModCleanup then
+        data.ModCleanup(self)
     end
 end
