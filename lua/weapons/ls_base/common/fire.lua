@@ -15,7 +15,7 @@ function SWEP:ShootBullet(damage, num_bullets, aimcone)
 	end
 
 	bullet.Tracer	= 1 -- Show a tracer on every x bullets
-	bullet.Force	= 1 -- Amount of force to give to phys objects
+	bullet.Force	= self.Primary.Force or 1 -- Amount of force to give to phys objects
 	bullet.Damage	= damage
 	bullet.AmmoType = ""
 
