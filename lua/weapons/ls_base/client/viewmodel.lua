@@ -1,6 +1,6 @@
 function SWEP:PreDrawViewModel(vm)
 	if CLIENT and self.CustomMaterial and not self.CustomMatSetup then
-		self.Owner:GetViewModel():SetMaterial(self.CustomMaterial)
+		self:GetOwner():GetViewModel():SetMaterial(self.CustomMaterial)
 		self.CustomMatSetup = true
 	end
 
@@ -61,16 +61,17 @@ function SWEP:CalcViewBob(eyePos, eyeAng)
 	local ft = math.Clamp(RealFrameTime(), 0, 1)
 	local ft8 = ft * 8
 
-	local ovel = self.Owner:GetVelocity()
+	local ply = self:GetOwner()
+	
+	local ovel = ply:GetVelocity()
 	local move = Vector(ovel.x, ovel.y, 0)
 	local movement = move:LengthSqr()
-	local mvRaw = math.Clamp(movement / self.Owner:GetRunSpeed() ^ 2, 0, 1)
+	local mvRaw = math.Clamp(movement / ply:GetRunSpeed() ^ 2, 0, 1)
 
 	local mv = Lerp(ft * 3.2, self.VMLastMV or mvRaw, mvRaw)
 	self.VMLastMV = mv
 
 	local vel = move:GetNormalized()
-	local rd = self.Owner:GetRight():Dot(vel)
 
 	if self:GetIronsights() then
 		mv = mv * 0.2
@@ -116,7 +117,7 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 		)
 	)
 	-- Second
-	local v0 = sin(ct * 7.5) * 3.5 * mv
+	v0 = sin(ct * 7.5) * 3.5 * mv
 	local r = sin(ct * 12.5) * 1.6 * mv
 
 	eyePos, eyeAng = longsword.math.rotateAround(
@@ -326,7 +327,6 @@ function SWEP:GetViewModelPosition( pos, ang )
 	ang:RotateAroundAxis(ang:Up(), ironAng.r)
 
 	local ply = self:GetOwner()
-	local vm = ply:GetViewModel()
 
 	return pos, ang
 end
