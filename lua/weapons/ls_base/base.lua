@@ -61,6 +61,8 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("Bool", 1, "Reloading")
 	self:NetworkVar("Bool", 2, "Bursting")
 	self:NetworkVar("Bool", 3, "Lowered")
+	self:NetworkVar("Bool", 4, "TriggerDown")
+	self:NetworkVar("Bool", 5, "TriggerCanFire")
 
 	self:NetworkVar("String", 0, "CurAttachment")
 
@@ -68,12 +70,11 @@ function SWEP:SetupDataTables()
 	self:NetworkVar("Float", 2, "Recoil")
 	self:NetworkVar("Float", 3, "ReloadTime")
 	self:NetworkVar("Float", 4, "NextIdle")
-
-	if self.ExtraDataTables then
+	if self.ExtraDataTables then -- change these when adding network vars
 		self:ExtraDataTables({
-			["Bool"] = 4,
+			["Bool"] = 5	,
 			["String"] = 1,
-			["Float"] = 5
+			["Float"] = 4
 		})
 	end
 end

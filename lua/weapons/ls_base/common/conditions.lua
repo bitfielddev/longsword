@@ -13,7 +13,7 @@ function SWEP:CanIronsight()
 	end
 	
 	local att = self:GetCurAttachment()
-	if att != "" and self.Attachments[att] and self.Attachments[att].Behaviour == "sniper_sight" and hook.Run("ShouldDrawLocalPlayer", self.Owner) then
+	if att != "" and self.Attachments[att] and self.Attachments[att].Behaviour == "sniperscope" and hook.Run("ShouldDrawLocalPlayer", self.Owner) then
 		return false
 	end
 
@@ -22,6 +22,6 @@ end
 
 function SWEP:CanReload()
 	return self:Ammo1() > 0 and self:Clip1() < self.Primary.ClipSize
-		and not self:GetReloading() and self:GetNextPrimaryFire() < CurTime()
+		and not self:GetReloading() and self:GetNextPrimaryFire() < CurTime() and (self.NextFMToggle or 0) < CurTime()
 end
 

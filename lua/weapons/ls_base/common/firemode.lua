@@ -1,5 +1,6 @@
 function SWEP:ToggleFireMode()
-    if not self.FireModes or #self.FireModes == 1 then return end
+    if not self.FireModes or #self.FireModes == 1 or (self.NextFMToggle or 0) > CurTime() then return end
+    self.NextFMToggle = CurTime() + 1
     local index = self.FireMode or 1
     if index >= #self.FireModes then
         index = 1
@@ -7,8 +8,18 @@ function SWEP:ToggleFireMode()
         index = index + 1
     end
 
-    self.FireMode = index
+    local old = self.FireModes[self.FireMode or 1]
 
+    self.FireMode = index
     local data = self.FireModes[index]
-    
+
+    old.Off(self)
+    data.On(self)
+
+    if SERVER then
+        self:GetOwner():LS_Notify("Changed firemode to " .. data.Name .. ".")
+    end
+
+    self:PlayAnim(ACT_VM_FIREMODE)
+    self:QueueIdle()
 end

@@ -42,3 +42,8 @@ net.Receive("longswordAttachmentRemove", function()
 
     wep:TakeAttachment(id)
 end)
+
+net.Receive("longswordNotify", function()
+    local msg = net.ReadString()
+    notification.AddLegacy(msg, NOTIFY_GENERIC, 3)
+end)

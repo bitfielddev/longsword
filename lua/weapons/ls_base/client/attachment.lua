@@ -27,7 +27,7 @@ function unmaskEntity(ent)
 end
 
 function wepMeta:GiveAttachment(attID)
-	if not self.IsLongsword then return end
+	if not self.IsLongsword or not self.Attachments then return end
 
 	local attData = self.Attachments[attID]
 	if not attData then return end
@@ -39,7 +39,7 @@ function wepMeta:GiveAttachment(attID)
 end
 
 function wepMeta:TakeAttachment(attID)
-	if not self.IsLongsword then return end
+	if not self.IsLongsword or not self.Attachments then return end
 
 	local attData = self.Attachments[attID]
 	if not attData then return end
