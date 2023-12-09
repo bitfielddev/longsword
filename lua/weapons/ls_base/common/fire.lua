@@ -65,6 +65,9 @@ end
 function SWEP:PrimaryAttack()
 	if not self:CanShoot() then return end
 
+	if not self.TriggerFire or self.TriggerFire > CurTime() then
+		return
+	end
 	local clip = self:Clip1()
 
 	if self.Primary.Burst and clip >= 3 then
@@ -82,7 +85,6 @@ function SWEP:PrimaryAttack()
 			self:QueueIdle()
 		end
 
-		self:EmitSound(self.EmptySound)
 		self:SetNextPrimaryFire(CurTime() + 1)
 	end
 end

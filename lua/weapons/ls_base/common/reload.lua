@@ -17,9 +17,6 @@ function SWEP:Reload()
 	end
 
 	if not self:CanReload() then return end
-	if self.Owner:KeyDown(IN_USE) and self.FireModes then
-		return self:ToggleFireMode()
-	end
 
 	-- self:EmitWeaponSound("LS_Generic.Reload")
 

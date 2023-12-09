@@ -1,9 +1,10 @@
 function SWEP:Think()
+	self:TriggerThink()
 	self:IronsightsThink()
 	self:RecoilThink()
 	self:IdleThink()
 	self:LoweredThink()
-
+	self:FiremodeThink()
 	if self:GetBursting() then self:BurstThink() end
 	if self:GetReloading() then self:ReloadThink() end
 
@@ -142,5 +143,64 @@ function SWEP:LoweredThink()
 		end
 	elseif not self.Owner:KeyDown(IN_RELOAD) and (self.RaiseTime or 0) != 0 then
 		self.RaiseTime = 0
+	end
+end
+
+function SWEP:FiremodeThink()
+	local ply = self:GetOwner()
+
+	if ply:KeyDown(IN_USE) and ply:KeyDown(IN_RELOAD) and self.FireModes then
+		return self:ToggleFireMode()
+	end
+end
+
+function SWEP:GetTriggerDelay()
+	return self.TriggerDelay or 0.05
+end
+
+function SWEP:GetTriggerDownSound()
+	return self.TriggerDownSound or self.EmptySound or ""
+end
+
+function SWEP:GetTriggerUpSound()
+	return self.TriggerUpSound or self.EmptySound or ""
+end
+
+function SWEP:TriggerThink()
+	if self:GetReloading() or self:IsSprinting() and self.LoweredPos then return end
+
+	local ply = self:GetOwner()
+	local held = ply:KeyDown(IN_ATTACK)
+	local delay = self:GetTriggerDelay()
+	local down = self:GetTriggerDown()
+
+	if held and not down then
+		self:SetTriggerDown(true)
+		self:SetTriggerCanFire(true)
+		local sndDown = self:GetTriggerDownSound()
+
+		if sndDown then
+			self:EmitSound(sndDown, nil, nil, 0.1)
+		end
+
+		self.TriggerFire = CurTime() + delay
+	elseif not held and down then
+		self:SetTriggerDown(false)
+		self:SetTriggerCanFire(false)
+
+		local sndUp = self:GetTriggerUpSound()
+		if sndUp then
+			self:EmitSound(sndUp, nil, 50)
+		end
+
+		self.TriggerFire = nil
+	end
+	
+	--print(self.TriggerFire, CurTime())
+	if self.TriggerFire and self.TriggerFire <= CurTime() and self:GetTriggerCanFire() and self:GetNextPrimaryFire() <= CurTime() then
+		self:PrimaryAttack()
+		if not self.Primary.Automatic then
+			self:SetTriggerCanFire(false)
+		end
 	end
 end
