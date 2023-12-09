@@ -190,7 +190,7 @@ function SWEP:TriggerThink()
 
 		local sndUp = self:GetTriggerUpSound()
 		if sndUp then
-			self:EmitSound(sndUp, nil, 50)
+			self:EmitSound(sndUp, nil, 80)
 		end
 
 		self.TriggerFire = nil
