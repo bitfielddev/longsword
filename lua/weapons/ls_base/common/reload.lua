@@ -24,7 +24,7 @@ function SWEP:Reload()
 		return self:ReloadShotgun()
 	end
 
-	self.Owner:DoReloadEvent()
+	self:GetOwner():DoReloadEvent()
 
 	if not self.DoEmptyReloadAnim or self:Clip1() != 0 then
 		self:PlayAnim(self.ReloadAnimation or ACT_VM_RELOAD)
@@ -40,9 +40,9 @@ function SWEP:Reload()
 	end
 
 	self:SetReloading( true )
-	self:SetReloadTime( CurTime() + self.Owner:GetViewModel():SequenceDuration() )
+	self:SetReloadTime( CurTime() + self:GetOwner():GetViewModel():SequenceDuration() )
 
-	hook.Run("LongswordWeaponReload", self.Owner, self)
+	hook.Run("LongswordWeaponReload", self:GetOwner(), self)
 end
 
 function SWEP:FinishReload()
@@ -51,5 +51,5 @@ function SWEP:FinishReload()
 	local amount = math.min( self:GetMaxClip1() - self:Clip1(), self:Ammo1() )
 
 	self:SetClip1( self:Clip1() + amount )
-	self.Owner:RemoveAmmo( amount, self:GetPrimaryAmmoType() )
+	self:GetOwner():RemoveAmmo( amount, self:GetPrimaryAmmoType() )
 end

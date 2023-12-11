@@ -2,8 +2,8 @@ function SWEP:ShootBullet(damage, num_bullets, aimcone)
 	local bullet = {}
 
 	bullet.Num 	= num_bullets
-	bullet.Src 	= self.Owner:GetShootPos() -- Source
-	bullet.Dir 	= self.Owner:GetAimVector() -- Dir of bullet
+	bullet.Src 	= self:GetOwner():GetShootPos() -- Source
+	bullet.Dir 	= self:GetOwner():GetAimVector() -- Dir of bullet
 	bullet.Spread 	= Vector(aimcone, aimcone, 0)	-- Aim Cone
 
 	if self.Primary.Tracer then
@@ -25,7 +25,7 @@ function SWEP:ShootBullet(damage, num_bullets, aimcone)
 		end
 	end
 
-	self.Owner:FireBullets(bullet)
+	self:GetOwner():FireBullets(bullet)
 
 	self:ShootEffects()
 end
@@ -36,16 +36,16 @@ end
 
 function SWEP:CalculateSpread()
 	local spread = self.Primary.Cone
-	local maxSpeed = self.LoweredPos and self.Owner:GetWalkSpeed() or self.Owner:GetRunSpeed()
+	local maxSpeed = self.LoweredPos and self:GetOwner():GetWalkSpeed() or self:GetOwner():GetRunSpeed()
 
-	spread = spread + self.Primary.Cone * math.Clamp( self.Owner:GetVelocity():Length2D() / maxSpeed, 0, self.Spread.VelocityMod )
+	spread = spread + self.Primary.Cone * math.Clamp( self:GetOwner():GetVelocity():Length2D() / maxSpeed, 0, self.Spread.VelocityMod )
 	spread = spread + self:GetRecoil() * self.Spread.RecoilMod
 
-	if not self.Owner:IsOnGround() then
+	if not self:GetOwner():IsOnGround() then
 		spread = spread * self.Spread.AirMod
 	end
 
-	if self.Owner:IsOnGround() and self.Owner:Crouching() then
+	if self:GetOwner():IsOnGround() and self:GetOwner():Crouching() then
 		spread = spread * self.Spread.CrouchMod
 	end
 
@@ -65,9 +65,6 @@ end
 function SWEP:PrimaryAttack()
 	if not self:CanShoot() then return end
 
-	if not self.TriggerFire or self.TriggerFire > CurTime() then
-		return
-	end
 	local clip = self:Clip1()
 
 	if self.Primary.Burst and clip >= 3 then

@@ -126,7 +126,7 @@ function SWEP:DrawVMAttachment(attID)
 	if not attData then return end
 
 	if attData.PlayerParent then
-		vm = self.Owner
+		vm = self:GetOwner()
 	end
 
 	if not IsValid(attData._CSModel) then

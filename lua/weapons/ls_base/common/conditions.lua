@@ -1,6 +1,6 @@
 function SWEP:IsSprinting()
-	return ( self.Owner:GetVelocity():Length2D() > self.Owner:GetRunSpeed() - 50 )
-		and self.Owner:IsOnGround()
+	return ( self:GetOwner():GetVelocity():Length2D() > self:GetOwner():GetRunSpeed() - 50 )
+		and self:GetOwner():IsOnGround()
 end
 
 function SWEP:CanShoot()
@@ -11,13 +11,8 @@ function SWEP:CanIronsight()
 	if self.NoIronsights then
 		return false
 	end
-	
-	local att = self:GetCurAttachment()
-	if att != "" and self.Attachments[att] and self.Attachments[att].Behaviour == "sniperscope" and hook.Run("ShouldDrawLocalPlayer", self.Owner) then
-		return false
-	end
 
-	return not self:IsSprinting() and not self:GetReloading() and self.Owner:IsOnGround() and not self:GetLowered()
+	return not self:ScopedIn() and not self:IsSprinting() and not self:GetReloading() and self:GetOwner():IsOnGround() and not self:GetLowered()
 end
 
 function SWEP:CanReload()
