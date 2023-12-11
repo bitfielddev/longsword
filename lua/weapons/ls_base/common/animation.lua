@@ -1,5 +1,5 @@
 function SWEP:PlayAnim(act)
-	local vmodel = self.Owner:GetViewModel()
+	local vmodel = self:GetOwner():GetViewModel()
 	local seq = isstring(act) and self:LookupSequence(act) or vmodel:SelectWeightedSequence(act)
 
 	vmodel:SendViewModelMatchingSequence(seq)
@@ -15,5 +15,5 @@ function SWEP:PlayAnimWorld(act)
 end
 
 function SWEP:QueueIdle()
-	self:SetNextIdle( CurTime() + self.Owner:GetViewModel():SequenceDuration() + 0.1 )
+	self:SetNextIdle( CurTime() + self:GetOwner():GetViewModel():SequenceDuration() + 0.1 )
 end

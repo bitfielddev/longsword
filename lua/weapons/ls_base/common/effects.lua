@@ -1,13 +1,13 @@
 function SWEP:ViewPunch()
 	if SERVER or (not game.SinglePlayer() and not IsFirstTimePredicted()) then return end
 	local punch = Angle()
-	local i = 3 * (self.Primary.Recoil)
+	local i = 3 * self.Primary.Recoil
 
 	local offset = Angle(math.random(0, -i * 0.9), math.random(-i * 0.25, i * 0.25))
 
 	self:GetOwner():ViewPunch(offset)
 	if IsFirstTimePredicted() and ( CLIENT or game.SinglePlayer() ) then
-		self.Owner:SetEyeAngles( self.Owner:EyeAngles() + offset * 0.2)
+		self:GetOwner():SetEyeAngles( self:GetOwner():EyeAngles() + offset * 0.2)
 	end
 end
 
@@ -88,16 +88,16 @@ function SWEP:ShootEffects()
 		local isThirdperson = ply:ShouldDrawLocalPlayer()
 
 		if not isThirdperson then
-			local vm = self.Owner:GetViewModel()
+			local vm = self:GetOwner():GetViewModel()
 			local attachment = vm:LookupAttachment(self.MuzzleAttachment or "muzzle")
 			local posang = vm:GetAttachment(attachment)
 
 			if posang then
 				local ef = EffectData()
-				ef:SetOrigin(self.Owner:GetShootPos())
-				ef:SetStart(self.Owner:GetShootPos())
-				ef:SetNormal(self.Owner:EyeAngles():Forward())
-				ef:SetEntity(self.Owner:GetViewModel())
+				ef:SetOrigin(self:GetOwner():GetShootPos())
+				ef:SetStart(self:GetOwner():GetShootPos())
+				ef:SetNormal(self:GetOwner():EyeAngles():Forward())
+				ef:SetEntity(self:GetOwner():GetViewModel())
 				ef:SetAttachment(attachment)
 				ef:SetScale(self.IronsightsMuzzleFlashScale or 1)
 
@@ -106,9 +106,9 @@ function SWEP:ShootEffects()
 		end
 	end
 
-	self.Owner:MuzzleFlash()
+	self:GetOwner():MuzzleFlash()
 	self:PlayAnimWorld(ACT_VM_PRIMARYATTACK)
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 
 	self:QueueIdle()
 	if self.CustomShootEffects then
