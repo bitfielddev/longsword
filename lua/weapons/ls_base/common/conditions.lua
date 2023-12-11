@@ -12,7 +12,7 @@ function SWEP:CanIronsight()
 		return false
 	end
 
-	return not self:ScopedIn() and not self:IsSprinting() and not self:GetReloading() and self:GetOwner():IsOnGround() and not self:GetLowered()
+	return not self:IsSprinting() and not self:GetReloading() and self:GetOwner():IsOnGround() and not self:GetLowered()
 end
 
 function SWEP:CanReload()
