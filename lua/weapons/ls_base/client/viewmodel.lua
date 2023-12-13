@@ -92,7 +92,7 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local spr = self:IsSprinting()
 
 	if spr then
-		ct = ct * 1.35
+		ct = ct * 1.5
 	else
 		mv = mv * 2.0
 	end
