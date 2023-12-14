@@ -197,6 +197,8 @@ function SWEP:DrawVMElement(data)
 		end
     end
 
+	if data.ShouldDraw and not data.ShouldDraw(self) then return end
+	
     local cs = data._CSModel
 
     local bone = vm:LookupBone(data.Bone)
