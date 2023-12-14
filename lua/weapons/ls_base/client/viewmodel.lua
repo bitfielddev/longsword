@@ -10,7 +10,6 @@ function SWEP:PreDrawViewModel(vm)
 end
 
 function SWEP:GetOffset()
-
 	local pos, ang = Vector(), Angle()
 
 	local centered = self:Centered()
@@ -21,8 +20,6 @@ function SWEP:GetOffset()
 	end
 
 	if self:GetReloading() then return pos, ang end
-
-
 
 	if ( self.LoweredPos and self:IsSprinting() ) or self:GetLowered() then
 		pos:Add(self.LoweredPos or Vector(3.5, -2, -2))

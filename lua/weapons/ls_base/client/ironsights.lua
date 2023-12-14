@@ -30,9 +30,9 @@ function SWEP:DoIronsightsRecoil()
 	local pitch = (recoilData.PitchValue or 0) * (recoilInfo.PitchMultiplier or 1) * self:GetRecoilMultiplier()
 
 	local recoilPos = Vector(
-		re * 0.5 * (recoilData.YawValue or 1),
+		re * 0.5 * (recoilData.YawValue or 1) + (roll * 0.1),
 		-re * 12 * (recoilInfo.BackMultiplier or 1),
-		(-pitch * 0.8) * (recoilInfo.PitchCompMultiplier or 1)
+		(-pitch * 0.8) * (recoilInfo.PitchCompMultiplier or 1) + (roll * 0.1)
 	)
 
 	local recoilAng = Angle(

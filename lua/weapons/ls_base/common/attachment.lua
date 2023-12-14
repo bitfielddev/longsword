@@ -4,7 +4,18 @@ function SWEP:HasAttachment(name)
 end
 
 function SWEP:ProcessAttachmentAdd(attID)
-	local data = self.Attachments[attID]
+    local data = self.Attachments[attID]
+    if not data then return end
+
+	self:ProcessModifiersOn(attID)
+
+    if data.ModSetup then
+        data.ModSetup(self)
+    end
+end
+
+function SWEP:ProcessModifiersOn(attID)
+    local data = self.Attachments[attID]
     if not data then return end
 
 	data._BaseValues = {}
@@ -22,25 +33,28 @@ function SWEP:ProcessAttachmentAdd(attID)
             end
         end
     end
-
-    if data.ModSetup then
-        data.ModSetup(self)
-    end
 end
 
 function SWEP:ProcessAttachmentRemove(attID)
 	local data = self.Attachments[attID]
     if not data then return end
 
-    if data._BaseValues then
+    self:ProcessModifiersOff(attID)
+
+    if data.ModCleanup then
+        data.ModCleanup(self)
+    end
+end
+
+function SWEP:ProcessModifiersOff(attID)
+    local data = self.Attachments[attID]
+    if not data then return end
+
+	if data._BaseValues then
         for key, value in pairs(data._BaseValues) do
             self[key] = value
         end
 
         data._BaseValues = {}
-    end
-
-    if data.ModCleanup then
-        data.ModCleanup(self)
     end
 end
