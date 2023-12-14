@@ -74,9 +74,10 @@ function SWEP:DrawVMAttachmentCrosshair(attID)
 
 
 	local ret = retData.Material or reticule
+	local col = retData.Color or color_white
 
 	render.SetMaterial(ret)
-	render.DrawQuadEasy(p, a:Forward(), retData.Size or 32, retData.Size or 32, retData.Color or color_white, a.r - 180)
+	render.DrawQuadEasy(p, a:Forward(), retData.Size or 32, retData.Size or 32, col, a.r - 180)
 end
 
 function SWEP:DrawVMAttachmentScope(attID)

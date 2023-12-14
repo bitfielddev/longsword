@@ -80,9 +80,6 @@ function SWEP:SetupDataTables()
 end
 
 function SWEP:ResetValues()
-end
-
-function SWEP:Initialize()
 	self:SetIronsights(false)
 
 	self:SetReloading(false)
@@ -92,6 +89,10 @@ function SWEP:Initialize()
 
 	self:SetRecoil(0)
 	self:SetNextIdle(0)
+end
+
+function SWEP:Initialize()
+	self:ResetValues()
 
 	self:SetHoldType(self.HoldType)
 
@@ -102,8 +103,6 @@ function SWEP:Initialize()
 	if self.CustomInit then
 		self:CustomInit()
 	end
-	
-	self:ResetValues()
 end
 
 function SWEP:OnReloaded()
@@ -122,6 +121,12 @@ function SWEP:OnReloaded()
 				element._CSModel:Remove()
 			end
 		end
+	end
+
+	for attID, on in pairs(self.EquippedAttachments or {}) do
+		if not on then continue end
+
+		self:ProcessModifiersOn(attID)
 	end
 end
 
@@ -165,13 +170,24 @@ function SWEP:Deploy()
 		end
 	end
 
+	local vm = self:GetOwner():GetViewModel()
+
+	if self.CustomSubMats then
+		for id, mat in pairs(self.CustomSubMats) do
+			vm:SetSubMaterial(id, mat)
+		end
+	else
+		for id, mat in pairs(vm:GetMaterials()) do
+			vm:SetSubMaterial(id, "")
+		end
+	end
+
 	if self.ExtraDeploy then
 		self:ExtraDeploy()
 	end
 
 	self:EmitWeaponSound(self:GetDeploySound())
 
-	local vm = self:GetOwner():GetViewModel()
 	local seq = vm:SelectWeightedSequence(self.DrawAnim or ACT_VM_DRAW)
 	local dur = vm:SequenceDuration(dur)
 
@@ -195,16 +211,9 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster(w)
-	-- reset everything when we holster
-	self:SetIronsights( false )
-	self:SetIronsightsRecoil( 0 )
+	local vm = self:GetOwner():GetViewModel()
 
-	self:SetReloading( false )
-	self:SetLowered(false)
-	self:SetReloadTime( 0 )
-
-	self:SetRecoil( 0 )
-	self:SetNextIdle( 0 )
+	self:ResetValues()
 
 	if CLIENT then
 		self.ViewModelPos = Vector( 0, 0, 0 )
@@ -217,6 +226,12 @@ function SWEP:Holster(w)
 			if self.Owner == LocalPlayer() then
 				self.Owner:GetViewModel():SetMaterial("")
 			end
+		end
+	end
+
+	if self.CustomSubMats then
+		for id, mat in pairs(self.CustomSubMats) do
+			vm:SetSubMaterial(id, "")
 		end
 	end
 
