@@ -1,9 +1,15 @@
-function SWEP:HasAttachment(name)
+local wepMeta = FindMetaTable("Weapon")
+
+function wepMeta:HasAttachment(name)
+    if not self.IsLongsword then return end
+
 	self.EquippedAttachments = self.EquippedAttachments or {}
 	return self.EquippedAttachments[name]
 end
 
-function SWEP:ProcessAttachmentAdd(attID)
+function wepMeta:ProcessAttachmentAdd(attID)
+    if not self.IsLongsword then return end
+
     local data = self.Attachments[attID]
     if not data then return end
 
@@ -14,7 +20,9 @@ function SWEP:ProcessAttachmentAdd(attID)
     end
 end
 
-function SWEP:ProcessModifiersOn(attID)
+function wepMeta:ProcessModifiersOn(attID)
+    if not self.IsLongsword then return end
+
     local data = self.Attachments[attID]
     if not data then return end
 
@@ -35,7 +43,9 @@ function SWEP:ProcessModifiersOn(attID)
     end
 end
 
-function SWEP:ProcessAttachmentRemove(attID)
+function wepMeta:ProcessAttachmentRemove(attID)
+    if not self.IsLongsword then return end
+
 	local data = self.Attachments[attID]
     if not data then return end
 
@@ -46,7 +56,9 @@ function SWEP:ProcessAttachmentRemove(attID)
     end
 end
 
-function SWEP:ProcessModifiersOff(attID)
+function wepMeta:ProcessModifiersOff(attID)
+    if not self.IsLongsword then return end
+
     local data = self.Attachments[attID]
     if not data then return end
 

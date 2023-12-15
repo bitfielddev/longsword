@@ -4,6 +4,8 @@ function SWEP:IsSprinting()
 end
 
 function SWEP:CanShoot()
+	if self.ExtraCanShoot and not self:ExtraCanShoot() then return false end
+
 	return not self:GetBursting() and not (self.LoweredPos and self:IsSprinting()) and self:GetReloadTime() < CurTime() and not self:GetLowered()
 end
 

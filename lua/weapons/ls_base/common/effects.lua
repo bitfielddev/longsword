@@ -114,4 +114,16 @@ function SWEP:ShootEffects()
 	if self.CustomShootEffects then
 		self:CustomShootEffects()
 	end
+
+	if self.PumpDelay then
+		timer.Simple(self.PumpDelay, function()
+			local anim = self.PumpAnimation or ACT_VM_PULLBACK
+			if self.GetPumpAnimation then
+				anim = self:GetPumpAnimation()
+			end
+
+			self:PlayAnim(anim)
+			self:QueueIdle()
+		end)
+	end
 end

@@ -4,6 +4,7 @@ function SWEP:Think()
 	self:IdleThink()
 	self:LoweredThink()
 	self:FiremodeThink()
+	self:SoundThink()
 	if self:GetBursting() then self:BurstThink() end
 	if self:GetReloading() then self:ReloadThink() end
 
@@ -112,6 +113,30 @@ function SWEP:IronsightsThink()
 		if CLIENT then
 			self:EmitWeaponSound("LS_Generic.ADSOut")
 		end
+	end
+end
+
+function SWEP:SoundThink()
+	if not self.Primary.LoopSound then return end
+
+	local cs = self:CanShoot()
+	local ply = self:GetOwner()
+	local kd = ply:KeyDown(IN_ATTACK)
+
+	print(kd, cs)
+	if kd and cs then
+		if not self.LoopSnd then
+			self.LoopSnd = CreateSound(self, self.Primary.LoopSound)
+		end
+
+		if not self.LoopSnd:IsPlaying() then
+			print("start")
+
+			self.LoopSnd:Play()
+		end
+	elseif (not kd or not cs) and self.LoopSnd and self.LoopSnd:IsPlaying() then
+		print("stop")
+		self.LoopSnd:Stop()
 	end
 end
 
