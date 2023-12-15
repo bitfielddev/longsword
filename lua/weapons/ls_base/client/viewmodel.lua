@@ -216,25 +216,32 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
 end
 
 function SWEP:JumpOffset(eyePos, eyeAng)
+	if not self.MuzzleData then
+		return eyePos, eyeAng
+	end
 	local ft = RealFrameTime()
 	local ply = self:GetOwner()
 
 	local grounded = ply:IsOnGround()
 
 	local curoffset = self.VMJump or 0
+	
 	local offset = Lerp(ft * (grounded and 4 or 0.4), curoffset, grounded and 0 or 1)
 
-	local z = offset * 1.5
 
-	local pos = Vector(0, 0, z)
-	local ang = Angle(-z, 0, 0)
+	local p = offset * 3.5
+
 
 	self.VMJump = offset
-	return longsword.math.translate(
+	return longsword.math.rotateAround(
 		eyePos,
 		eyeAng,
-		pos,
-		ang
+		self.MuzzleData.Pos,
+		Angle(
+			p,
+			0,
+			0
+		)
 	)
 end
 

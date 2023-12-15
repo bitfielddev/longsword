@@ -1,4 +1,6 @@
 function SWEP:PlayFireSound()
+    if self.Primary.LoopSound then return end
+    
     local ply = self:GetOwner()
     local dsp = 20
 
@@ -21,14 +23,15 @@ function SWEP:PlayFireSound()
 
     end
 
-    self:EmitSound(
-        self.Primary.Sound,
-        nil,
-        nil,
-        nil,
-        CHAN_STATIC,
-        nil,
-        dsp
-    )
+    if CLIENT then
+        self:EmitWeaponSound(self.Primary.Sound)
+    else
+        self:EmitSound(self.Primary.Sound, nil, nil, nil, nil, nil, dsp)
+    end
 
+    if self.Primary.SoundLayers then
+        for _, snd in pairs(self.Primary.SoundLayers) do
+            self:EmitWeaponSound(snd)
+        end
+    end
 end
