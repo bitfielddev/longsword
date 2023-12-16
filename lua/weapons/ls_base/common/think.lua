@@ -106,12 +106,12 @@ function SWEP:IronsightsThink()
 	if self.Owner:KeyDown(IN_ATTACK2) and self:CanIronsight() and not self:GetIronsights() then
 		self:SetIronsights( true )
 		if CLIENT then
-			self:EmitWeaponSound("LS_Generic.ADSIn")
+			self:EmitWeaponSound(longsword.ironInSound or "LS_Generic.ADSIn")
 		end
 	elseif (not self.Owner:KeyDown(IN_ATTACK2) or not self:CanIronsight()) and self:GetIronsights() then
 		self:SetIronsights( false )
 		if CLIENT then
-			self:EmitWeaponSound("LS_Generic.ADSOut")
+			self:EmitWeaponSound(longsword.ironOutSound or "LS_Generic.ADSOut")
 		end
 	end
 end
@@ -122,8 +122,6 @@ function SWEP:SoundThink()
 	local cs = self:CanShoot()
 	local ply = self:GetOwner()
 	local kd = ply:KeyDown(IN_ATTACK)
-
-	print(kd, cs)
 	if kd and cs then
 		if not self.LoopSnd then
 			self.LoopSnd = CreateSound(self, self.Primary.LoopSound)

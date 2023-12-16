@@ -210,6 +210,8 @@ function SWEP:DrawVMElement(data)
 		else
 			pos, ang = vm:GetPos(), vm:GetAngles()
 		end
+
+		
 	else
 		pos, ang = vm:GetPos(), vm:GetAngles()
 	end

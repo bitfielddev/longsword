@@ -31,7 +31,7 @@ function SWEP:PlayFireSound()
 
     if self.Primary.SoundLayers then
         for _, snd in pairs(self.Primary.SoundLayers) do
-            self:EmitWeaponSound(snd)
+            self:EmitWeaponSound(snd, nil, nil, self.SoundLayerVol or 1)
         end
     end
 end
