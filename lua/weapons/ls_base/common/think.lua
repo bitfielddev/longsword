@@ -96,13 +96,7 @@ end
 function SWEP:IronsightsThink()
 	self._CustomRecoil = self._CustomRecoil or {}
 
-	if CLIENT then
-		self._CustomRecoil.Value = Lerp(RealFrameTime() * 4, self._CustomRecoil.Value or 0, 0)
-		self._CustomRecoil.PitchValue = Lerp(RealFrameTime() * 8, self._CustomRecoil.PitchValue or 0, 0)
-		self._CustomRecoil.RollValue = Lerp(RealFrameTime() * 2, self._CustomRecoil.RollValue or 0, 0)
-		self._CustomRecoil.YawValue = Lerp(RealFrameTime() * 4, self._CustomRecoil.YawValue or 0, math.Rand(-1, 1))
 
-	end
 	if self.Owner:KeyDown(IN_ATTACK2) and self:CanIronsight() and not self:GetIronsights() then
 		self:SetIronsights( true )
 		if CLIENT then

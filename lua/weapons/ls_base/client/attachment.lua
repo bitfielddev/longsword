@@ -143,20 +143,32 @@ function SWEP:DrawVMAttachment(attID)
 
 	local att = attData._CSModel
 	local c = attData.Cosmetic
-
-	if not c.Bone then
-		return
-	end
-
-	local bone = vm:LookupBone(c.Bone)
-
-	if not bone then
-		return
-	end
 	
-	local m = vm:GetBoneMatrix(bone)
+	local pos, ang
+	if c.Bone then
+		local bone = vm:LookupBone(c.Bone)
+	
+		if not bone then
+			return
+		end
 
-	local pos, ang = m:GetTranslation(), m:GetAngles()
+		local m = vm:GetBoneMatrix(bone)
+		if not m then return end
+
+		pos, ang = m:GetTranslation(), m:GetAngles()
+
+	elseif c.Attachment then
+		local attc = vm:LookupAttachment(c.Attachment)
+		if not attc then return end
+
+		local data = vm:GetAttachment(attc)
+		if not data then return end
+
+		pos, ang = data.Pos, data.Ang
+	else
+		pos, ang = vm:GetPos(), vm:GetAngles()
+	end
+
 	
 	att:SetPos(pos + ang:Forward() * c.Pos.x + ang:Right() * c.Pos.y + ang:Up() * c.Pos.z)
 	ang:RotateAroundAxis(ang:Up(), c.Ang.y)
@@ -210,8 +222,6 @@ function SWEP:DrawVMElement(data)
 		else
 			pos, ang = vm:GetPos(), vm:GetAngles()
 		end
-
-		
 	else
 		pos, ang = vm:GetPos(), vm:GetAngles()
 	end

@@ -1,5 +1,5 @@
 function SWEP:ToggleFireMode()
-    if not self.FireModes or #self.FireModes == 1 or (self.NextFMToggle or 0) > CurTime() then return end
+    if not self.FireModes or #self.FireModes == 1 or (self.NextFMToggle or 0) > CurTime() or self:GetReloading() then return end
     self.NextFMToggle = CurTime() + 1
     local index = self.FireMode or 1
     if index >= #self.FireModes then

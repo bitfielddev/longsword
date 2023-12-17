@@ -15,30 +15,35 @@ function SWEP:GetRecoilMultiplier()
 end
 
 function SWEP:DoIronsightsRecoil()
+	local ft = RealFrameTime()
+	local ct = RealTime()
+
 	self._CustomRecoil = self._CustomRecoil or {}
+	self._CustomRecoil.Value = Lerp(ft * 2, self._CustomRecoil.Value or 0, 0)
+	self._CustomRecoil.PitchValue = Lerp(ft * 8, self._CustomRecoil.PitchValue or 0, 0)
+	self._CustomRecoil.RollValue = Lerp(ft * 1, self._CustomRecoil.RollValue or 0, 0)
+
+	local mul = self:GetRecoilMultiplier()
 
 	local recoilData = self._CustomRecoil
 	local recoilInfo = self.Recoil or {}
 
-	local ft = RealFrameTime()
-	local ct = RealTime()
+	local re = (recoilData.Value or 0) * mul
+	local rollVal = (recoilData.RollValue or 0) * (recoilInfo.RollMultiplier or 1) * mul
+	local roll = math.sin(ct * 20) * 1.2 * rollVal
 
-	local re = (recoilData.Value or 0) * self:GetRecoilMultiplier()
-	local rollVal = (recoilData.RollValue or 0) * (recoilInfo.RollMultiplier or 1) * self:GetRecoilMultiplier()
-	local roll = math.cos(ct * (recoilData.RollRandom or 1)) * 1.2 * rollVal
-
-	local pitch = (recoilData.PitchValue or 0) * (recoilInfo.PitchMultiplier or 1) * self:GetRecoilMultiplier()
+	local pitch = (recoilData.PitchValue or 0) * (recoilInfo.PitchMultiplier or 1) * mul
 
 	local recoilPos = Vector(
-		re * 0.5 * (recoilData.YawValue or 1) + (roll * 0.1),
+		0,
 		-re * 12 * (recoilInfo.BackMultiplier or 1),
-		(-pitch * 0.8) * (recoilInfo.PitchCompMultiplier or 1) + (roll * 0.1)
+		(-pitch * 0.8) * (recoilInfo.PitchCompMultiplier or 1)
 	)
 
 	local recoilAng = Angle(
 		pitch * 4,
 		0,
-		(recoilData.YawValue or 1) * re * 4.4
+		0
 	)
 
 
