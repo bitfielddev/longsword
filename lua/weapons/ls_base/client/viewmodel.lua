@@ -91,6 +91,7 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	if spr then
 		ct = ct * 1.5
 	else
+		ct = ct * 1.02
 		mv = mv * 2.0
 	end
 	
@@ -187,7 +188,8 @@ function SWEP:SwayThink()
 		dist.y = -dist.y
 		dist.r = -dist.r
 	end
-	dist = dist * 2
+
+	dist = dist * 3.5
 	dist = dist * (self.SwayMul or 1)
 
     self.VMSwayAng = LerpAngle(ft * 32, self.VMSwayAng or dist, dist)
@@ -199,7 +201,7 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
     local swayRaw = self.VMSwayAng or Angle()
 	local sway = 1.4 * (self:GetIronsights() and 0.2 or 1)
 
-    swayRaw.r = (-(swayRaw.y * 0.4)) * 1.2 * sway
+    swayRaw.r = -(swayRaw.y * 0.4) * 1.6 * sway
 
     self.VMSwayAngSmooth = LerpAngle(ft * 1.8, self.VMSwayAngSmooth or swayRaw, swayRaw)
     local smoothAng = self.VMSwayAngSmooth * 2
@@ -356,4 +358,8 @@ function SWEP:TranslateFOV(fov)
 	end
 
 	return fov * self.FOVMultiplier
+end
+
+function SWEP:CalcView(ply, origin, angles, fov)
+	return origin, angles, fov
 end

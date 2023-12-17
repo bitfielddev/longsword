@@ -51,6 +51,12 @@ function SWEP:GetCrosshairGap()
 end
 
 function SWEP:DoDrawCrosshair(x, y)
+	local cv = GetConVar("longsword_dyncrosshair")
+	if not cv:GetBool() then
+		return false
+	end
+
+
 	local length = 8
 	local candraw = self:CanDrawCrosshair()
 
@@ -71,4 +77,6 @@ function SWEP:DoDrawCrosshair(x, y)
     surface.DrawLine(x, y - gap, x, y - gap - length)
 
 	surface.DrawRect(x - 1, y - 1, 2, 2)
+
+	return true
 end
