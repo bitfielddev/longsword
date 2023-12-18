@@ -2,6 +2,10 @@ function SWEP:PlayAnim(act)
 	local vmodel = self:GetOwner():GetViewModel()
 	local seq = isstring(act) and self:LookupSequence(act) or vmodel:SelectWeightedSequence(act)
 
+	if not seq or seq == -1 then
+		return longsword.debugPrint("Attempting to play invalid sequence " .. act .. "!")
+	end
+	
 	vmodel:SendViewModelMatchingSequence(seq)
 
 	return vmodel:SequenceDuration(seq)

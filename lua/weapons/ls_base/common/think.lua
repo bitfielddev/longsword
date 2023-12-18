@@ -20,6 +20,9 @@ function SWEP:Think()
 		return
 	end
 
+	self.LastCurTime = CurTime()
+
+
 	local attach = self:GetCurAttachment()
 	self.KnownAttachment = self.KnownAttachment or ""
 	
@@ -99,12 +102,24 @@ function SWEP:IronsightsThink()
 
 	if self.Owner:KeyDown(IN_ATTACK2) and self:CanIronsight() and not self:GetIronsights() then
 		self:SetIronsights( true )
-		if CLIENT then
+		if CLIENT and (IsFirstTimePredicted() or game.SinglePlayer()) then
+			if self.IronsightsFrac < 0.01 then
+				self.IronsightsEarly = true
+			else
+				self.IronsightsEarly = false
+			end
 			self:EmitWeaponSound(longsword.ironInSound or "LS_Generic.ADSIn")
 		end
 	elseif (not self.Owner:KeyDown(IN_ATTACK2) or not self:CanIronsight()) and self:GetIronsights() then
 		self:SetIronsights( false )
-		if CLIENT then
+
+		if CLIENT and (IsFirstTimePredicted() or game.SinglePlayer()) then
+			if self.IronsightsFrac < 0.93 then
+				self.IronsightsEarly = true
+			else
+				self.IronsightsEarly = false
+			end
+	
 			self:EmitWeaponSound(longsword.ironOutSound or "LS_Generic.ADSOut")
 		end
 	end
@@ -122,12 +137,9 @@ function SWEP:SoundThink()
 		end
 
 		if not self.LoopSnd:IsPlaying() then
-			print("start")
-
 			self.LoopSnd:Play()
 		end
 	elseif (not kd or not cs) and self.LoopSnd and self.LoopSnd:IsPlaying() then
-		print("stop")
 		self.LoopSnd:Stop()
 	end
 end

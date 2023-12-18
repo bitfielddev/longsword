@@ -92,8 +92,8 @@ function SWEP:DrawVMAttachmentScope(attID)
 	if not IsValid(att) then return end
 
 	local c = {}
-		c.origin = ply:GetShootPos()
-		c.angles = vm:GetAngles()
+		c.origin = vm:GetPos()
+		c.angles = EyeAngles()
 		c.fov = scope.FOV or 14
 		c.x, c.y = 0, 0
 		c.w, c.h = ScrW(), ScrH()
@@ -101,6 +101,18 @@ function SWEP:DrawVMAttachmentScope(attID)
 		c.drawviewmodel = false
 		c.drawhud = false 
 		c.aspect = 1
+
+	if scope.RTOffset then
+		c.drawviewmodel = true
+
+		local attPos = self.LastVMPos or vm:GetPos()
+		local attAng = self.LastVMAng or vm:GetAngles()
+
+		attPos, attAng = longsword.math.translate(attPos, attAng, scope.RTOffset, scope.RTOffsetAng or Angle())
+
+		c.origin = attPos
+		c.angles = attAng
+	end
 
 	render.PushRenderTarget(longsword.rt)
 	render.OverrideAlphaWriteEnable(true, true)
@@ -234,31 +246,6 @@ function SWEP:DrawVMElement(data)
     cs:DrawModel()
 end
 
-function SWEP:ViewModelDrawn()
-	local vm = self:GetOwner():GetViewModel()
-	if not IsValid(vm) then
-		return
-	end
-
-	if self.CustomDrawVM then
-		self:CustomDrawVM(vm)
-	end
-
-	if self.VMElements then
-		for _, element in pairs(self.VMElements) do
-			self:DrawVMElement(element)
-		end
-	end
-
-	if not self.Attachments then return end
-
-	self.EquippedAttachments = self.EquippedAttachments or {}
-	for attID, equipped in pairs(self.EquippedAttachments) do
-		if not equipped then continue end
-
-		self:DrawVMAttachment(attID)
-	end
-end
 
 -- seems pointless rn tbh
 

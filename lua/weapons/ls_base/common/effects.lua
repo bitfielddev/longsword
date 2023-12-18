@@ -35,6 +35,7 @@ function SWEP:ResetCustomRecoil()
 	self._CustomRecoil = self._CustomRecoil or {}
 	self._CustomRecoil.Value = 1
 	self._CustomRecoil.PitchValue = 1
+	self._CustomRecoil.PitchRandom = math.random(10, 14)
 	self._CustomRecoil.RollValue = 1
 end
 
@@ -68,9 +69,11 @@ function SWEP:GetFireAnimation()
 	return self.FireAnim or ACT_VM_PRIMARYATTACK
 end
 
+local smoke = Material("sprites/smoke")
+local trail
 function SWEP:ShootEffects()
 	local ply = self:GetOwner()
-
+	local vm = ply:GetViewModel()
 	if not self:GetIronsights() or self:ShouldAnimateFire() then
 		local anim = self:GetFireAnimation()
 		self:PlayAnim(anim)
@@ -78,6 +81,7 @@ function SWEP:ShootEffects()
 	end
 
 	self:PlayFireSound()
+	local muz = vm:LookupAttachment(self.MuzzleAttachment or "muzzle")
 
 	if CLIENT then
 		if self:ShouldResetCustomRecoil() and (game.SinglePlayer() or IsFirstTimePredicted()) then
@@ -87,9 +91,7 @@ function SWEP:ShootEffects()
 		local isThirdperson = ply:ShouldDrawLocalPlayer()
 
 		if not isThirdperson then
-			local vm = self:GetOwner():GetViewModel()
-			local attachment = vm:LookupAttachment(self.MuzzleAttachment or "muzzle")
-			local posang = vm:GetAttachment(attachment)
+			local posang = vm:GetAttachment(muz)
 
 			if posang then
 				local ef = EffectData()
@@ -97,7 +99,7 @@ function SWEP:ShootEffects()
 				ef:SetStart(self:GetOwner():GetShootPos())
 				ef:SetNormal(self:GetOwner():EyeAngles():Forward())
 				ef:SetEntity(self:GetOwner():GetViewModel())
-				ef:SetAttachment(attachment)
+				ef:SetAttachment(muz)
 				ef:SetScale(self.IronsightsMuzzleFlashScale or 1)
 
 				util.Effect(self.IronsightsMuzzleFlash or "ls_muzzleflash", ef)

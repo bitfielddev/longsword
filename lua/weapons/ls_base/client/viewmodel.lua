@@ -317,11 +317,13 @@ function SWEP:GetViewModelPosition( pos, ang )
 	pos = pos + self.ViewModelPos.y * ang:Forward()
 	pos = pos + self.ViewModelPos.z * ang:Up()
 
+	pos, ang = self:CustomRecoilOffset(pos, ang)
 	pos, ang = self:CalcViewBob(pos, ang)
 	pos, ang = self:ViewSwayOffset(pos, ang)
 	pos, ang = self:ViewIdleOffset(pos, ang)
 	pos, ang = self:ViewCrouchOffset(pos, ang)
 	pos, ang = self:JumpOffset(pos, ang)
+
 	local ironPos, ironAng = self:IronsightsOffset()
 
 	pos = pos + ironPos.x * ang:Right()
@@ -333,6 +335,10 @@ function SWEP:GetViewModelPosition( pos, ang )
 	ang:RotateAroundAxis(ang:Up(), ironAng.r)
 
 	local ply = self:GetOwner()
+
+	
+	self.LastVMPos = pos
+	self.LastVMAng = ang
 
 	return pos, ang
 end
@@ -346,9 +352,9 @@ function SWEP:GetViewFOV()
 		return self.IronsightsFOV
 	end
 
-
 	return 1
 end
+
 SWEP.FOVMultiplier = 1
 SWEP.LastFOVUpdate = 0 -- gets called many times per frame... weird.
 function SWEP:TranslateFOV(fov)
@@ -362,4 +368,31 @@ end
 
 function SWEP:CalcView(ply, origin, angles, fov)
 	return origin, angles, fov
+end
+
+
+function SWEP:ViewModelDrawn()
+	local vm = self:GetOwner():GetViewModel()
+	if not IsValid(vm) then
+		return
+	end
+
+	if self.CustomDrawVM then
+		self:CustomDrawVM(vm)
+	end
+
+	if self.VMElements then
+		for _, element in pairs(self.VMElements) do
+			self:DrawVMElement(element)
+		end
+	end
+
+	if not self.Attachments then return end
+
+	self.EquippedAttachments = self.EquippedAttachments or {}
+	for attID, equipped in pairs(self.EquippedAttachments) do
+		if not equipped then continue end
+
+		self:DrawVMAttachment(attID)
+	end
 end

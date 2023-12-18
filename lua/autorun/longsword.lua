@@ -38,6 +38,16 @@ function longsword.includeDirectory(dirPath)
     end
 end
 
+--- Prints only when `developer 1` is enabled
+-- @string msg The message to print
+-- @realm shared
+function longsword.debugPrint(msg)
+    local dev = GetConVar("developer")
+    if dev:GetBool() then
+        print("[longsword debug] " .. msg)
+    end
+end
+
 longsword.includeDirectory("longsword/lib")
 longsword.includeDirectory("longsword")
 longsword.includeDirectory("longsword/hooks")
