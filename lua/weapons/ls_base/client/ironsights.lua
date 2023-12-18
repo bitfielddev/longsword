@@ -7,20 +7,22 @@ local appr = math.Approach
 local zero = Vector()
 local zeroAng = Angle()
 
-SWEP.IronsightsMidAng = Angle(7, 0, 15)
-SWEP.IronsightsMid = Vector(-0.8, 0, -3.5)
+SWEP.IronsightsInMidAng = Angle(0, -15, 0)
+SWEP.IronsightsInMid = Vector(-1, 0, -1)
 
+SWEP.IronsightsOutMidAng = Angle(0, 0, 0)
+SWEP.IronsightsOutMid = Vector(-2, 0, -1)
 function SWEP:GetRecoilMultiplier()
 	return (self.Recoil and self.Recoil.VisualMultiplier or self.IronsightsRecoilVisualMultiplier) or 1
 end
 
-function SWEP:DoIronsightsRecoil()
+function SWEP:CustomRecoilOffset(eyePos, eyeAng)
 	local ft = RealFrameTime()
 	local ct = RealTime()
 
 	self._CustomRecoil = self._CustomRecoil or {}
 	self._CustomRecoil.Value = Lerp(ft * 2, self._CustomRecoil.Value or 0, 0)
-	self._CustomRecoil.PitchValue = Lerp(ft * 8, self._CustomRecoil.PitchValue or 0, 0)
+	self._CustomRecoil.PitchValue = Lerp(ft * 3, self._CustomRecoil.PitchValue or 0, 0)
 	self._CustomRecoil.RollValue = Lerp(ft * 1, self._CustomRecoil.RollValue or 0, 0)
 
 	local mul = self:GetRecoilMultiplier()
@@ -30,51 +32,53 @@ function SWEP:DoIronsightsRecoil()
 
 	local re = (recoilData.Value or 0) * mul
 	local rollVal = (recoilData.RollValue or 0) * (recoilInfo.RollMultiplier or 1) * mul
-	local roll = math.sin(ct * 20) * 1.2 * rollVal
-
-	local pitch = (recoilData.PitchValue or 0) * (recoilInfo.PitchMultiplier or 1) * mul
+	local roll = math.cos(ct * 25) * 3.2 * rollVal
 
 	local recoilPos = Vector(
 		0,
 		-re * 12 * (recoilInfo.BackMultiplier or 1),
-		(-pitch * 0.8) * (recoilInfo.PitchCompMultiplier or 1)
-	)
-
-	local recoilAng = Angle(
-		pitch * 4,
-		0,
 		0
 	)
 
+	local recoilAng = Angle(
+		0,
+		0,
+		roll
+	)
 
-	self.RecoilRoll = Lerp(ft * 2, self.RecoilRoll or 0, roll)
-	recoilAng.y = recoilAng.y + roll
+	eyePos = eyePos + eyeAng:Right() * recoilPos.x
+	eyePos = eyePos + eyeAng:Forward() * recoilPos.y
+	eyePos = eyePos + eyeAng:Up() * recoilPos.z
+	
+	eyeAng:RotateAroundAxis(eyeAng:Right(), recoilAng.p * mul)
+    eyeAng:RotateAroundAxis(eyeAng:Up(), recoilAng.y * mul)
+    eyeAng:RotateAroundAxis(eyeAng:Forward(), recoilAng.r * mul)
 
-	local rpSmooth = LerpVector(ft * 32, self.VMRPos or recoilPos, recoilPos)
-	self.VMRPos = rpSmooth
-
-	local rpAngSmooth = LerpAngle(ft * 32, self.VMRAng or recoilAng, recoilAng)
-	self.VMRAng = rpAngSmooth
-
-	return rpSmooth, rpAngSmooth
+	return eyePos, eyeAng
 end
+
+function SWEP:GetIronsightsMid()
+	if self:GetIronsights() then
+		return self.IronsightsInMid, self.IronsightsInMidAng
+	else
+		return self.IronsightsOutMid, self.IronsightsOutMidAng
+	end
+
+end
+
 
 function SWEP:IronsightsOffset(oPos, oAng)
 	local ct = CurTime()
 	local ft = RealFrameTime()
 	local is = self:GetIronsights()
 
+	local mid, midang = self:GetIronsightsMid()
 	local dir = is and 1 or 0
 	self.IronsightsFrac = Lerp(ft * (is and 3.7 or 3.1) * (self.IronsightsSpeed or 1), self.IronsightsFrac or 0, dir)
 
 	local frac = self.IronsightsFrac
-	local vec = longsword.math.vecQuadBezier(zero, self.IronsightsMid or zero, self.IronsightsPos, frac)
-	local ang = longsword.math.angQuadBezier(zeroAng, self.IronsightsMidAng or zeroAng, self.IronsightsAng, frac )
-
-	local rPos, rAng = self:DoIronsightsRecoil()
-		
-	vec:Add(rPos)
-	ang:Add(rAng)
+	local vec = longsword.math.vecQuadBezier(zero, mid or zero, self.IronsightsPos, frac)
+	local ang = longsword.math.angQuadBezier(zeroAng, midang or zeroAng, self.IronsightsAng, frac )
 
 	return vec, ang
 end
