@@ -229,7 +229,7 @@ function SWEP:DrawVMElement(data)
 	local pos, ang
 	if bone then
 		local m = vm:GetBoneMatrix(bone)
-		if IsValid(m) then
+		if m then
 			pos, ang = m:GetTranslation(), m:GetAngles()
 		else
 			pos, ang = vm:GetPos(), vm:GetAngles()
