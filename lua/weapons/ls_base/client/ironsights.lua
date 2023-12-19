@@ -23,16 +23,15 @@ function SWEP:CustomRecoilOffset(eyePos, eyeAng)
 	self._CustomRecoil = self._CustomRecoil or {}
 	self._CustomRecoil.Value = Lerp(ft * 2, self._CustomRecoil.Value or 0, 0)
 	self._CustomRecoil.PitchValue = Lerp(ft * 3, self._CustomRecoil.PitchValue or 0, 0)
-	self._CustomRecoil.RollValue = Lerp(ft * 1, self._CustomRecoil.RollValue or 0, 0)
-
+	self._CustomRecoil.RollValue = Lerp(ft * 2.5, self._CustomRecoil.RollValue or 0, 0)
+	self._CustomRecoil.RollSmooth = Lerp(ft * 10, self._CustomRecoil.RollSmooth or self._CustomRecoil.RollValue, self._CustomRecoil.RollValue)
 	local mul = self:GetRecoilMultiplier()
 
 	local recoilData = self._CustomRecoil
 	local recoilInfo = self.Recoil or {}
 
 	local re = (recoilData.Value or 0) * mul
-	local rollVal = (recoilData.RollValue or 0) * (recoilInfo.RollMultiplier or 1) * mul
-	local roll = math.cos(ct * 25) * 3.2 * rollVal
+	local rollVal = (recoilData.RollSmooth or 0) * (recoilInfo.RollMultiplier or 1) * mul
 
 	local recoilPos = Vector(
 		0,
@@ -43,7 +42,7 @@ function SWEP:CustomRecoilOffset(eyePos, eyeAng)
 	local recoilAng = Angle(
 		0,
 		0,
-		roll
+		rollVal * 7
 	)
 
 	eyePos = eyePos + eyeAng:Right() * recoilPos.x
