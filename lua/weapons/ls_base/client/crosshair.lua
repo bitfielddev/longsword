@@ -46,7 +46,7 @@ function SWEP:GetCrosshairGap()
 
 	base = base * (self:IsSprinting() and (self.Spread.SprintMod or 2) * 4 or 1)
     base = base * (self:GetIronsights() and (self.Spread.IronsightsMod or 0.7) or 1)
-
+	
     return base
 end
 
