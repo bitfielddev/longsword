@@ -1,3 +1,4 @@
+local originalCol = Color(201, 165, 112)
 function EFFECT:Init( data )
 	self.offset = data:GetOrigin() + Vector( 0, 0, 0.2 )
 	self.angles = data:GetAngles()
@@ -35,5 +36,21 @@ function EFFECT:Init( data )
             data:GetEntity(),
             data:GetAttachment()
         )
+    end
+
+    if CLIENT then
+        local light = DynamicLight(ent:EntIndex())
+        if not light then return longsword.debugPrint("Couldn't create dynamic light.") end
+
+        local col = wep.LightColor or originalCol
+    
+        light.pos = LocalPlayer():GetShootPos()
+        light.r = col.r
+        light.g = col.g
+        light.b = col.b
+        light.brightness = 2
+        light.decay = 5000
+        light.dietime = 0.2
+        light.size = 256
     end
 end
