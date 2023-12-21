@@ -187,6 +187,7 @@ function SWEP:SwayThink()
 		dist.p = -dist.p
 		dist.y = -dist.y
 		dist.r = -dist.r
+		dist = dist * 0.7
 	end
 
 	dist = dist * 3.5
