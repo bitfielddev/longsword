@@ -7,11 +7,11 @@ local appr = math.Approach
 local zero = Vector()
 local zeroAng = Angle()
 
-SWEP.IronsightsInMidAng = Angle(0, -15, 0)
-SWEP.IronsightsInMid = Vector(-1, 0, -1)
+SWEP.IronsightsInMidAng = Angle(0, -6, 0)
+SWEP.IronsightsInMid = Vector(0, 0, -1.5)
 
 SWEP.IronsightsOutMidAng = Angle(0, 0, 0)
-SWEP.IronsightsOutMid = Vector(-2, 0, -1)
+SWEP.IronsightsOutMid = Vector(-2, 0, -2)
 function SWEP:GetRecoilMultiplier()
 	return (self.Recoil and self.Recoil.VisualMultiplier or self.IronsightsRecoilVisualMultiplier) or 1
 end
@@ -73,7 +73,7 @@ function SWEP:IronsightsOffset(oPos, oAng)
 
 	local mid, midang = self:GetIronsightsMid()
 	local dir = is and 1 or 0
-	self.IronsightsFrac = Lerp(ft * (is and 3.7 or 3.1) * (self.IronsightsSpeed or 1), self.IronsightsFrac or 0, dir)
+	self.IronsightsFrac = Lerp(ft * (is and 4.5 or 3.1) * (self.IronsightsSpeed or 1), self.IronsightsFrac or 0, dir)
 
 	local frac = self.IronsightsFrac
 	local vec = longsword.math.vecQuadBezier(zero, mid or zero, self.IronsightsPos, frac)
