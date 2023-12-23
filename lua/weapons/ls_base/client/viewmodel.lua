@@ -13,7 +13,7 @@ function SWEP:GetOffset()
 	local pos, ang = Vector(), Angle()
 
 	local centered = self:Centered()
-	if centered and not self:GetIronsights() then
+	if centered and not self:GetIronsights() and (not self:IsSprinting() or not self.LoweredPos) then
 		local cpos, cang = self:GetCenterPos()
 		pos:Add(cpos)
 		ang:Add(cang)
@@ -102,7 +102,7 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 
 	-- First
 	local v0 = cos(ct * 7.5) * 1.2 * mv
-	local v1 = sin(ct * 15.0) * 0.6 * mv
+	local v1 = sin(ct * 15.5) * 0.6 * mv
 
 	eyePos, eyeAng = longsword.math.rotateAround(
 		eyePos,

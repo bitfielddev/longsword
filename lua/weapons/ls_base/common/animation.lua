@@ -6,6 +6,7 @@ function SWEP:PlayAnim(act)
 		return longsword.debugPrint("Attempting to play invalid sequence " .. act .. "!")
 	end
 	
+	vmodel:ResetSequenceInfo()
 	vmodel:SendViewModelMatchingSequence(seq)
 
 	return vmodel:SequenceDuration(seq)
