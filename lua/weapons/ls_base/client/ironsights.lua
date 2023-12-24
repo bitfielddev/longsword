@@ -32,15 +32,15 @@ function SWEP:CustomRecoilOffset(eyePos, eyeAng)
 
 	local re = (recoilData.Value or 0) * mul
 	local rollVal = (recoilData.RollSmooth or 0) * (recoilInfo.RollMultiplier or 1) * mul
-
+	local pitchVal = (recoilData.PitchValue or 0) * (recoilInfo.PitchMultiplier or 1) * mul
 	local recoilPos = Vector(
 		0,
 		-re * 12 * (recoilInfo.BackMultiplier or 1),
-		0
+		-pitchVal * 0.1 * (recoilInfo.PitchCompMultiplier or 1)
 	)
 
 	local recoilAng = Angle(
-		0,
+		pitchVal,
 		0,
 		rollVal * 7
 	)
