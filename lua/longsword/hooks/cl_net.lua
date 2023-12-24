@@ -47,3 +47,17 @@ net.Receive("longswordNotify", function()
     local msg = net.ReadString()
     notification.AddLegacy(msg, NOTIFY_GENERIC, 3)
 end)
+
+net.Receive("longswordDynSound", function()
+    local snd = net.ReadString()
+    local pitch = net.ReadUInt(16)
+    local level = net.ReadUInt(16)
+    local eid = net.ReadUInt(32)
+    local vol = net.ReadFloat()
+    local noMuffle = net.ReadBool()
+
+    local ent = Entity(eid)
+    if not IsValid(ent) then return end
+
+    ent:EmitDynSound(snd, pitch, level, vol, noMuffle)
+end)
