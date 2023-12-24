@@ -23,10 +23,8 @@ function SWEP:PlayFireSound()
 
     end
 
-    if CLIENT then
-        self:EmitWeaponSound(self.Primary.Sound)
-    else
-        self:EmitSound(self.Primary.Sound, nil, nil, nil, nil, nil, dsp)
+    if SERVER then
+        self:EmitDynSound(self.Primary.Sound, nil, nil, nil, true)
     end
 
     if self.Primary.SoundLayers then

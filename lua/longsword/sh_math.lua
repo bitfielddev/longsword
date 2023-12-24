@@ -114,3 +114,14 @@ function longsword.math.rotateAround(pos, ang, vec, rot)
     mat:Translate(-vec)
     return mat:GetTranslation(), mat:GetAngles()
 end
+
+--- Reflects a vector
+-- @vec vector The vector origin
+-- @vec normal The normal of the surface
+-- @treturn vec The reflected result
+-- @realm shared
+function longsword.math.reflect(vector, normal)
+    local dir = vector:Dot(normal) * 2
+
+    return vector - (normal * dir)
+end

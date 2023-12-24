@@ -4,6 +4,7 @@ util.AddNetworkString("longswordEcho")
 util.AddNetworkString("longswordNotify")
 util.AddNetworkString("longswordAttachmentAdd")
 util.AddNetworkString("longswordAttachmentRemove")
+util.AddNetworkString("longswordDynSound")
 
 local plyMeta = FindMetaTable("Player")
 
