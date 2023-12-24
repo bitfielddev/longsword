@@ -23,9 +23,7 @@ function SWEP:PlayFireSound()
 
     end
 
-    if SERVER then
-        self:EmitDynSound(self.Primary.Sound, nil, nil, nil, true)
-    end
+    self:EmitWeaponSound(self.Primary.Sound)
 
     if self.Primary.SoundLayers then
         for _, snd in pairs(self.Primary.SoundLayers) do

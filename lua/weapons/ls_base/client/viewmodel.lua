@@ -114,20 +114,8 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 			0
 		)
 	)
-	-- Second
 	v0 = sin(ct * 7.5) * 3.5 * mv
 	local r = (sin(ct * 5.0) * 2.6 * mv)
-
-	eyePos, eyeAng = longsword.math.rotateAround(
-		eyePos,
-		eyeAng,
-		vector_origin,
-		Angle(
-			0,
-			-v0,
-			r
-		)
-	)
 
 	-- Finalize
 	eyePos, eyeAng = longsword.math.translate(
@@ -140,8 +128,8 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 		),
 		Angle(
 			0,
-			0,
-			0
+			v0,
+			r
 		)
 	)
 
