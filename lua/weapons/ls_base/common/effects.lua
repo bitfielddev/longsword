@@ -32,11 +32,8 @@ function SWEP:ShouldResetCustomRecoil()
 end
 
 function SWEP:ResetCustomRecoil()
-	self._CustomRecoil = self._CustomRecoil or {}
-	self._CustomRecoil.Value = 1
-	self._CustomRecoil.PitchValue = 1
-	self._CustomRecoil.PitchRandom = math.random(10, 14)
-	self._CustomRecoil.RollValue = math.Rand(-1, 1)
+	self.RecoilTarget = 1
+	self.RecoilSpeed = 64
 end
 
 function SWEP:ShouldAnimateFire()
@@ -84,9 +81,14 @@ function SWEP:ShootEffects()
 	local muz = vm:LookupAttachment(self.MuzzleAttachment or "muzzle")
 
 	if CLIENT then
+		self.BlurFraction = 1
 		if self:ShouldResetCustomRecoil() and (game.SinglePlayer() or IsFirstTimePredicted()) then
 			self:ResetCustomRecoil()
 		end
+
+		self.RecoilCameraRoll = 1
+		self.RecoilCameraFreq = math.random(15, 23)
+		self.RecoilCameraLastShoot = CurTime()
 
 		local isThirdperson = ply:ShouldDrawLocalPlayer()
 

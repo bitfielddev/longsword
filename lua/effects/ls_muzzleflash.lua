@@ -1,4 +1,11 @@
 local originalCol = Color(201, 165, 112)
+local flashes = {
+    "muzzleflash_1",
+    "muzzleflash_3",
+    "muzzleflash_4",
+    "muzzleflash_5",
+    "muzzleflash_6"
+}
 function EFFECT:Init( data )
 	self.offset = data:GetOrigin() + Vector( 0, 0, 0.2 )
 	self.angles = data:GetAngles()
@@ -11,32 +18,26 @@ function EFFECT:Init( data )
     if not IsValid(wep) then return end
 
     if (game.SinglePlayer() or IsFirstTimePredicted()) then
-        wep.NextFlash = wep.NextFlash or 0
-
-        if wep.NextFlash < CurTime() then
-            ParticleEffectAttach(
-                wep.MuzzleFlashName or "muzzleflash_1",
-                PATTACH_POINT_FOLLOW,
-                data:GetEntity(),
-                data:GetAttachment()
-            )    
-
-            wep.NextFlash = CurTime() + 0.25
-        end
-
-    end
-
-    if not wep.NoFlashShock then
-        local size = wep.MuzzleFlashShock or "small"
-        local name = "muzzle_smoke_shock_" .. size
-
         ParticleEffectAttach(
-            name,
+            wep.MuzzleFlashName or flashes[math.random(#flashes)],
             PATTACH_POINT_FOLLOW,
             data:GetEntity(),
             data:GetAttachment()
-        )
+        )    
+
     end
+
+    -- if not wep.NoFlashShock then
+    --     local size = wep.MuzzleFlashShock or "small"
+    --     local name = "muzzle_smoke_shock_" .. size
+
+    --     ParticleEffectAttach(
+    --         name,
+    --         PATTACH_POINT_FOLLOW,
+    --         data:GetEntity(),
+    --         data:GetAttachment()
+    --     )
+    -- end
 
     if CLIENT then
         local light = DynamicLight(ent:EntIndex())
