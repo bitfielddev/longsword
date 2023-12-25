@@ -15,7 +15,7 @@ function EFFECT:Init( data )
 
         if wep.NextFlash < CurTime() then
             ParticleEffectAttach(
-                wep.MuzzleFlashName or "muzzleflash_pistol",
+                wep.MuzzleFlashName or "muzzleflash_1",
                 PATTACH_POINT_FOLLOW,
                 data:GetEntity(),
                 data:GetAttachment()
