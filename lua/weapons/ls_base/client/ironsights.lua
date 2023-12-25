@@ -21,8 +21,8 @@ function SWEP:CustomRecoilOffset(eyePos, eyeAng)
 	local ct = RealTime()
 
 	self._CustomRecoil = self._CustomRecoil or {}
-	self._CustomRecoil.Value = Lerp(ft * 2, self._CustomRecoil.Value or 0, 0)
-	self._CustomRecoil.PitchValue = Lerp(ft * 3, self._CustomRecoil.PitchValue or 0, 0)
+	self._CustomRecoil.Value = Lerp(ft * 6, self._CustomRecoil.Value or 0, 0)
+	self._CustomRecoil.PitchValue = Lerp(ft * 4, self._CustomRecoil.PitchValue or 0, 0)
 	self._CustomRecoil.RollValue = Lerp(ft * 2.5, self._CustomRecoil.RollValue or 0, 0)
 	self._CustomRecoil.RollSmooth = Lerp(ft * 10, self._CustomRecoil.RollSmooth or self._CustomRecoil.RollValue, self._CustomRecoil.RollValue)
 	local mul = self:GetRecoilMultiplier()

@@ -71,7 +71,7 @@ function SWEP:CalcViewBob(eyePos, eyeAng)
 	local vel = move:GetNormalized()
 
 	if self:GetIronsights() then
-		mv = mv * 0.2
+		mv = mv * 0.1
 	end
 
 	eyePos, eyeAng = self:ViewBob(eyePos, eyeAng, mv, ct, ft)
@@ -89,10 +89,10 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local spr = self:IsSprinting()
 
 	if spr then
-		ct = ct * 1.5
+		ct = ct * 1.7
 	else
-		ct = ct * 1.02
-		mv = mv * 2.0
+		ct = ct * 1.05
+		mv = mv * 2.5
 	end
 	
 	local muz = self.MuzzleData or {}
@@ -115,7 +115,7 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 		)
 	)
 	v0 = sin(ct * 7.5) * 3.5 * mv
-	local r = (sin(ct * 15) * 1.6 * mv) * math.abs(cos(ct * 6) * 0.6 * mv)
+	local r = sin(ct * 8) * 1.6 * mv
 
 	-- Finalize
 	eyePos, eyeAng = longsword.math.translate(
@@ -178,7 +178,7 @@ function SWEP:SwayThink()
 		dist = dist * 0.7
 	end
 
-	dist = dist * 3.5
+	dist = dist * 5.5
 	dist = dist * (self.SwayMul or 1)
 
     self.VMSwayAng = LerpAngle(ft * 32, self.VMSwayAng or dist, dist)
@@ -200,7 +200,7 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
     return longsword.math.translate(
         eyePos, 
         eyeAng, 
-        Vector(smoothAng.y * 0.1 * mul, 0, -smoothAng.p * 0.1 * mul), 
+        Vector(smoothAng.y * 0.05 * mul, 0, -smoothAng.p * 0.05 * mul), 
         smoothAng, 
         sway
     )
