@@ -19,8 +19,6 @@ function SWEP:GetOffset()
 		ang:Add(cang)
 	end
 
-	if self:GetReloading() then return pos, ang end
-
 	if ( self.LoweredPos and self:IsSprinting() ) or self:GetLowered() then
 		pos:Add(self.LoweredPos or Vector(3.5, -2, -2))
 		ang:Add(self.LoweredAng or Angle(-16, 32, -16))
@@ -89,7 +87,7 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local spr = self:IsSprinting()
 
 	if spr then
-		ct = ct * 1.7
+		ct = ct * 1.5
 	else
 		ct = ct * 1.05
 		mv = mv * 2.5
@@ -102,7 +100,7 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 
 	-- First
 	local v0 = cos(ct * 7.5) * 1.2 * mv
-	local v1 = sin(ct * 15.5) * 0.6 * mv
+	local v1 = sin(ct * 16.5) * 0.5 * mv
 
 	eyePos, eyeAng = longsword.math.rotateAround(
 		eyePos,
@@ -190,9 +188,9 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
     local swayRaw = self.VMSwayAng or Angle()
 	local sway = 1.4 * (self:GetIronsights() and 0.2 or 1)
 
-    swayRaw.r = -(swayRaw.y * 0.4) * 1.6 * sway
+    -- swayRaw.r = -(swayRaw.y * 0.4) * 1.6 * sway
 
-    self.VMSwayAngSmooth = LerpAngle(ft * 1.8, self.VMSwayAngSmooth or swayRaw, swayRaw)
+    self.VMSwayAngSmooth = LerpAngle(ft * 2, self.VMSwayAngSmooth or swayRaw, swayRaw)
     local smoothAng = self.VMSwayAngSmooth * 2
 
 	local mul = (self.SwayPosMul or 1) + (self.SwayMul or 1)
@@ -200,7 +198,7 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
     return longsword.math.translate(
         eyePos, 
         eyeAng, 
-        Vector(smoothAng.y * 0.05 * mul, 0, -smoothAng.p * 0.05 * mul), 
+        Vector(smoothAng.y * 0.1 * mul, 0, -smoothAng.p * 0.1 * mul), 
         smoothAng, 
         sway
     )
@@ -356,7 +354,11 @@ function SWEP:TranslateFOV(fov)
 end
 
 function SWEP:CalcView(ply, origin, angles, fov)
-	return origin, angles, fov
+	local ct = CurTime()
+
+	local roll = self.RecoilCameraRoll or 0
+
+	return origin, angles, fov + (roll * 2)
 end
 
 

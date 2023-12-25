@@ -174,3 +174,11 @@ function SWEP:DrawHUD()
 		self:DrawAttachmentHUD(attachment, hdr)
 	end
 end
+
+function SWEP:RenderScreenspaceEffects()
+	local fx = self.BlurFraction or 0
+
+	self.BlurFraction = Lerp(RealFrameTime() * 1, fx, 0)
+
+	DrawToyTown(fx * 2, ScrH() / 2)
+end

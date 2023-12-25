@@ -23,3 +23,10 @@ hook.Add("ShouldDrawHUDBox", "longswordimpulseHUDStopDrawing", function()
 
 	return tobool(v)
 end)
+hook.Add("RenderScreenspaceEffects", "longswordPostFX", function()
+	local wep = LocalPlayer():GetActiveWeapon()
+
+	if not IsValid(wep) or not wep.RenderScreenspaceEffects then return end
+
+	wep:RenderScreenspaceEffects()
+end)

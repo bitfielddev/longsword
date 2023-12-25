@@ -46,6 +46,12 @@ end
 
 function SWEP:RecoilThink()
 	self:SetRecoil( math.Clamp( self:GetRecoil() - FrameTime() * (self.Primary.RecoilRecoveryRate or 1.4), 0, self.Primary.MaxRecoil or 1 ) )
+
+	if CLIENT then
+		if (self.RecoilCameraLastShoot or 0) + 0.1 < CurTime() then
+			self.RecoilCameraRoll = Lerp(RealFrameTime() * 2, self.RecoilCameraRoll or 0, 0)
+		end
+	end
 end
 
 function SWEP:BurstThink()
