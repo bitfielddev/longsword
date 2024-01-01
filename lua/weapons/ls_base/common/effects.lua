@@ -144,6 +144,8 @@ function SWEP:ShootEffects()
 end
 
 function SWEP:DoBulletEjection()
+	if (self.NextBulletEject or 0) > CurTime() then return end
+	self.NextBulletEject = CurTime() + (self.Primary.Delay or 0)
 	local ply = self:GetOwner()
 	local vm = ply:GetViewModel()
 	if not IsValid(vm) then return end
@@ -185,8 +187,10 @@ function SWEP:DoBulletEjection()
 	elseif self.Primary.BulletEffect then
 		local ef = EffectData()
 		ef:SetEntity(vm)
+		ef:SetAttachment(attID)
 		ef:SetOrigin(data.Pos)
 		ef:SetAngles(data.Ang)
+		ef:SetScale(self.Primary.BulletScale or 1)
 		util.Effect(self.Primary.BulletEffect, ef)
 	else
 		return longsword.debugPrint("DoBulletEjection called on weapon with no bullet properties!")
