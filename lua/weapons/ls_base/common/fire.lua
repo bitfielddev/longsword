@@ -76,6 +76,7 @@ function SWEP:PrimaryAttack()
 		self:SetReloadTime(delay)
 	elseif clip >= 1 then
 		self:Shoot()
+		self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 	else
 		if not self.NoDryFireAnim then
 			self:PlayAnim(ACT_VM_DRYFIRE)
@@ -94,7 +95,6 @@ function SWEP:Shoot()
 	self:AddRecoil()
 	self:ViewPunch()
 	
-	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 	self:SetReloadTime(CurTime() + self.Primary.Delay)
 end
 

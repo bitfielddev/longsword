@@ -39,6 +39,12 @@ function SWEP:CustomRecoilOffset(eyePos, eyeAng)
 		self.RecoilValue = value
 	end
 
+	local rollRand = self.RecoilRollRandom or 0
+	if rollRand != 0 then
+		self.RecoilRollRandom = Lerp(ft * 7, rollRand, 0)
+	end
+	rollRand = rollRand * (recoilInfo.RollMultiplier or 1)
+	
 	-- Positions
 	value = math.ease.InQuad(value)
 
@@ -48,7 +54,7 @@ function SWEP:CustomRecoilOffset(eyePos, eyeAng)
 	recoilPos.z = -pitch * 0.2 * (recoilInfo.PitchCompMultiplier or 1)
 
 	recoilAng.p = pitch
-	recoilAng.r = math.sin(ct * 24) * value
+	recoilAng.r = rollRand * 4
 	eyePos = eyePos + eyeAng:Right() * recoilPos.x
 	eyePos = eyePos + eyeAng:Forward() * recoilPos.y
 	eyePos = eyePos + eyeAng:Up() * recoilPos.z

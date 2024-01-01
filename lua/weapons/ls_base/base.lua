@@ -190,7 +190,7 @@ function SWEP:Deploy()
 	local seq = vm:SelectWeightedSequence(self.DrawAnim or ACT_VM_DRAW)
 	local dur = vm:SequenceDuration(dur)
 
-	if dur != 0 and dur then
+	if dur != 0 and dur and not self.NoDrawAnim then
 		self:SetNextPrimaryFire(CurTime() + self:PlayAnim(self.DrawAnim or ACT_VM_DRAW))
 		self:QueueIdle()
 
