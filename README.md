@@ -1,20 +1,21 @@
-# longsword
-a lightweight weapon base by vin, made for impulse but you can use it too!
+# longsword: Remastered
 
-[Read the wiki](https://github.com/vingard/longsword/wiki)
-[Download the content](https://steamcommunity.com/sharedfiles/filedetails/?id=3092301722)
-heavily edited version of the Lite weapon base, made for impulse but it will also work outisde of impulse. Feel free to make edits of this or use it as long as you keep credit.
+A remastered, actively maintained version of [longsword](https://github.com/vingard/longsword), developed by Gateway Networks.
 
-## Update
-This is an updated version of longsword with brand new weapon bob/sway, more organized code, etc.
+This version of longsword is designed for compatibility with more than just the impulse Framework.
 
-### New features
-* New weapon bob
-* New weapon sway
-* Lowering system (disabled if using impulse)
-* Split into several files instead of being one file
-* New muzzle flash
-* New ironsights
+## Required content
+Workshop content is required for this version of LS to work.
+https://steamcommunity.com/sharedfiles/filedetails/?id=3092301722
 
-### Planned features
-* New attachment system (w/ compatibility for impulse)
+## Features
+* Realistic weapon movements
+* Several attachments allowed instead of just 1
+* New scope system
+* ArcCW muzzle flash
+* Firemode support
+* Convars to control several aspects of the weapon.
+* Custom crosshair that changes based on spread
+* Custom WorldModel support (use SWEP.WMOffset as a table with `Position` and `Angles`)
+* Custom recoil effects
+* Gnomes?
