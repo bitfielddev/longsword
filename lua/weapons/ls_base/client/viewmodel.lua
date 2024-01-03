@@ -83,65 +83,14 @@ function SWEP:CalcViewBob(eyePos, eyeAng)
 	return eyePos, eyeAng
 end
 
--- function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
--- 	local spr = self:IsSprinting()
-
--- 	if spr then
--- 		ct = ct * 1.5
--- 	else
--- 		ct = ct * 1.05
--- 		mv = mv * 2.5
--- 	end
-	
--- 	local muz = self.MuzzleData or {}
-
--- 	local muzPos = muz.Pos or Vector()
--- 	local muzAng = muz.Ang or Angle()
-
--- 	-- First
--- 	local v0 = cos(ct * 7.5) * 1.2 * mv
--- 	local v1 = sin(ct * 16.5) * 0.5 * mv
-
--- 	eyePos, eyeAng = longsword.math.rotateAround(
--- 		eyePos,
--- 		eyeAng,
--- 		muzPos,
--- 		Angle(
--- 			(mv * 1.5) - v1,
--- 			v0,
--- 			0
--- 		)
--- 	)
--- 	v0 = sin(ct * 7.5) * 3.5 * mv
--- 	local r = sin(ct * 8) * 1.6 * mv
-
--- 	-- Finalize
--- 	eyePos, eyeAng = longsword.math.translate(
--- 		eyePos,
--- 		eyeAng,
--- 		Vector(
--- 			v0 * 0.25,
--- 			0,
--- 			0
--- 		),
--- 		Angle(
--- 			0,
--- 			v0,
--- 			r
--- 		)
--- 	)
-
--- 	return eyePos, eyeAng
--- end
-
 function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local spr = self:IsSprinting()
 
 	if spr then
-		ct = ct * 1.8
+		ct = ct * 1.5
 	else
-		ct = ct * 1.2
-		mv = mv * 1.5
+		ct = ct * 1.05
+		mv = mv * 2.5
 	end
 	
 	local muz = self.MuzzleData or {}
@@ -150,34 +99,34 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local muzAng = muz.Ang or Angle()
 
 	-- First
-	local r = sin(ct * 13) * mv
-
-	
-	local v1 = cos(ct * 6) * 1.2 * mv
-	local v2 = sin(ct * 13) * 0.4 * mv
-	local y = abs(sin(ct * 3)) * mv * 0.5
+	local v0 = cos(ct * 7.5) * 1.2 * mv
+	local v1 = sin(ct * 16.5) * 0.5 * mv
 
 	eyePos, eyeAng = longsword.math.rotateAround(
 		eyePos,
 		eyeAng,
 		muzPos,
 		Angle(
-			v2,
-			v1,
+			(mv * 1.5) - v1,
+			v0,
 			0
 		)
 	)
+	v0 = sin(ct * 7.5) * 3.5 * mv
+	local r = sin(ct * 8) * 1.6 * mv
+
+	-- Finalize
 	eyePos, eyeAng = longsword.math.translate(
 		eyePos,
 		eyeAng,
 		Vector(
+			v0 * 0.25,
 			0,
-			y,
 			0
 		),
 		Angle(
 			0,
-			0,
+			v0,
 			r
 		)
 	)
@@ -238,7 +187,7 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
     local swayRaw = self.VMSwayAng or Angle()
 	local sway = 1.4 * (self:GetIronsights() and 0.2 or 1)
 
-    -- swayRaw.r = -(swayRaw.y * 0.4) * 1.6 * sway
+    swayRaw.r = -(swayRaw.y * 0.4) * 1.5 * sway
 
     self.VMSwayAngSmooth = LerpAngle(ft * 2, self.VMSwayAngSmooth or swayRaw, swayRaw)
     local smoothAng = self.VMSwayAngSmooth * 2

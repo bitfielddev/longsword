@@ -46,7 +46,7 @@ function SWEP:CustomRecoilOffset(eyePos, eyeAng)
 	rollRand = rollRand * (recoilInfo.RollMultiplier or 1)
 	
 	-- Positions
-	value = math.ease.InQuad(value)
+	value = target == 1 and math.ease.OutQuad(value) or math.ease.InQuad(value)
 
 	local pitch = value * 2 * (recoilInfo.PitchMultiplier or 1)
 
