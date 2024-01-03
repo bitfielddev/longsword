@@ -184,6 +184,12 @@ function SWEP:DoBulletEjection()
 	
 			phy:SetVelocity(vel)
 		end
+
+		timer.Simple(3, function()
+			if not IsValid(cs) then return end
+
+			cs:Remove()
+		end)
 	elseif self.Primary.BulletEffect then
 		local ef = EffectData()
 		ef:SetEntity(vm)
