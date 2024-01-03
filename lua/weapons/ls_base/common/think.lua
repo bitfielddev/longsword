@@ -40,7 +40,9 @@ function SWEP:IdleThink()
 
 	if CurTime() > self:GetNextIdle() then
 		self:SetNextIdle( 0 )
-		self:PlayAnim( self.IdleAnim or ACT_VM_IDLE )
+		if not self.NoIdleAnim then
+			self:PlayAnim(self.IdleAnim or ACT_VM_IDLE)
+		end
 	end
 end
 

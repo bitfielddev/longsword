@@ -308,7 +308,9 @@ function SWEP:IdleThink()
 
 	if CurTime() > self:GetNextIdle() then
 		self:SetNextIdle( 0 )
-		self:SendWeaponAnim( self:Clip1() > 0 and ACT_VM_IDLE or ACT_VM_IDLE_EMPTY )
+		if not self.NoIdle then
+			self:SendWeaponAnim( self:Clip1() > 0 and ACT_VM_IDLE or ACT_VM_IDLE_EMPTY )
+		end
 	end
 end
 
