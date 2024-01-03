@@ -69,7 +69,7 @@ function SWEP:CalcViewBob(eyePos, eyeAng)
 	local vel = move:GetNormalized()
 
 	if self:GetIronsights() then
-		mv = mv * 0.1
+		mv = mv * (self.IronsightsBobMultiplier or 0.1)
 	end
 
 	eyePos, eyeAng = self:ViewBob(eyePos, eyeAng, mv, ct, ft)
