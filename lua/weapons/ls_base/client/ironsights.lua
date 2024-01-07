@@ -8,7 +8,7 @@ local zero = Vector()
 local zeroAng = Angle()
 
 SWEP.IronsightsInMidAng = Angle(0, -6, 0)
-SWEP.IronsightsInMid = Vector(0, 0, -1.5)
+SWEP.IronsightsInMid = Vector(-4, 0, -2.5)
 
 SWEP.IronsightsOutMidAng = Angle(0, 0, 0)
 SWEP.IronsightsOutMid = Vector(-2, 0, -2)
