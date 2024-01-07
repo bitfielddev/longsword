@@ -1,3 +1,5 @@
+local CurTime = UnPredictedCurTime -- fix VM lag
+
 function SWEP:PreDrawViewModel(vm)
 	if CLIENT and self.CustomMaterial and not self.CustomMatSetup then
 		self:GetOwner():GetViewModel():SetMaterial(self.CustomMaterial)
