@@ -164,9 +164,6 @@ function SWEP:SwayThink()
 		invertSway = swayCV:GetBool()
 	end
 
-	dist.p = -math.Clamp(dist.p, -5, 5)
-    dist.y = math.Clamp(dist.y, -5, 5)
-    dist.r = math.Clamp(dist.r, -5, 5)
 
 	if invertSway then
 		dist.p = -dist.p
@@ -178,6 +175,11 @@ function SWEP:SwayThink()
 	dist = dist * 5.5
 	dist = dist * (self.SwayMul or 1)
 
+	dist.p = -math.Clamp(dist.p, -5, 5)
+    dist.y = math.Clamp(dist.y, -5, 5)
+    dist.r = math.Clamp(dist.r, -5, 5)
+
+	
     self.VMSwayAng = LerpAngle(ft * 32, self.VMSwayAng or dist, dist)
     self.VMSwayLastAng = eyeAng
 end
