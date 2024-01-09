@@ -20,7 +20,8 @@ sound.Add({
 
 sound.Add({
     name = "LS_Generic.Holster",
-    sound = "weapons/ins2/uni/uni_weapon_holster.wav"
+    sound = "weapons/ins2/uni/uni_weapon_holster.wav",
+    pitch = { 94, 104 }
 })
 
 sound.Add({
