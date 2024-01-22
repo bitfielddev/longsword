@@ -125,3 +125,12 @@ function longsword.math.reflect(vector, normal)
 
     return vector - (normal * dir)
 end
+
+--- Uses Hooke's Law to calculate spring force given a spring constant and the compression
+-- @float constant Spring constant
+-- @float stretch Spring compression/stretch
+-- @treturn float The value calculated
+-- @realm shared
+function longsword.math.spring(constant, stretch)
+    return -constant * stretch -- This does not have to be a function lmfao
+end

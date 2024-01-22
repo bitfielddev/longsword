@@ -176,6 +176,9 @@ function SWEP:DrawHUD()
 end
 
 function SWEP:RenderScreenspaceEffects()
+	local cv = GetConVar("longsword_shootblur")
+	if not cv or not cv:GetBool() then return end
+
 	local fx = self.BlurFraction or 0
 
 	self.BlurFraction = Lerp(RealFrameTime() * 1, fx, 0)

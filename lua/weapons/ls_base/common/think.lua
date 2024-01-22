@@ -14,6 +14,9 @@ function SWEP:Think()
 
 	if CLIENT then
 		self:SwayThink()
+		
+		self:FOVThink()
+
 	end
 
 	if not CLIENT then

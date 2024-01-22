@@ -160,10 +160,11 @@ function SWEP:SwayThink()
 	local dist = eyeAng - lastAng
 
 	local swayCV = GetConVar("longsword_invertsway")
+	local leftCV = GetConVar("longsword_lefthand")
 
 	local invertSway = self.SwayDrag
-	if swayCV and swayCV:GetBool() then
-		invertSway = swayCV:GetBool()
+	if swayCV and swayCV:GetBool() or (leftCV and leftCV:GetBool()) then
+		invertSway = true
 	end
 
 
@@ -184,6 +185,7 @@ function SWEP:SwayThink()
 	
     self.VMSwayAng = LerpAngle(ft * 32, self.VMSwayAng or dist, dist)
     self.VMSwayLastAng = eyeAng
+	self.VMSwayBeforeAng = lastAng
 end
 
 function SWEP:ViewSwayOffset(eyePos, eyeAng)
@@ -194,15 +196,14 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
     swayRaw.r = -(swayRaw.y * 0.4) * 1.5 * sway
 
     self.VMSwayAngSmooth = LerpAngle(ft * 2, self.VMSwayAngSmooth or swayRaw, swayRaw)
-    local smoothAng = self.VMSwayAngSmooth * 2
+    local ang = self.VMSwayAngSmooth * 2
 
 	local mul = (self.SwayPosMul or 1) + (self.SwayMul or 1)
-
     return longsword.math.translate(
         eyePos, 
         eyeAng, 
-        Vector(smoothAng.y * 0.1 * mul, 0, -smoothAng.p * 0.1 * mul), 
-        smoothAng, 
+        Vector(ang.y * 0.1 * mul, 0, -ang.p * 0.1 * mul), 
+        ang, 
         sway
     )
 end
@@ -287,6 +288,13 @@ function SWEP:GetCenterPos()
 end
 
 function SWEP:GetViewModelPosition( pos, ang )
+	local cvFlip = GetConVar("longsword_lefthand")
+	if cvFlip and cvFlip:GetBool() then
+		self.ViewModelFlip = true
+	else
+		self.ViewModelFlip = weapons.Get(self:GetClass()).ViewModelFlip -- original value
+	end
+
 	local vm = self:GetOwner():GetViewModel()
 	if IsFirstTimePredicted() or game.SinglePlayer() then
 		local muz = self:LookupAttachment(self.MuzzleAttachment or "muzzle")
@@ -325,8 +333,6 @@ function SWEP:GetViewModelPosition( pos, ang )
 	ang:RotateAroundAxis(ang:Up(), ironAng.r)
 
 	local ply = self:GetOwner()
-
-	
 	self.LastVMPos = pos
 	self.LastVMAng = ang
 
@@ -360,6 +366,11 @@ function SWEP:CalcView(ply, origin, angles, fov)
 	local ct = CurTime()
 
 	local roll = self.RecoilCameraRoll or 0
+	local cv = GetConVar("longsword_shootfov")
+	if not cv or not cv:GetBool() then
+		roll = 0
+	end
+
 
 	return origin, angles, fov + (roll * 2)
 end
