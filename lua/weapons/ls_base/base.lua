@@ -88,6 +88,8 @@ function SWEP:ResetValues()
 
 	self:SetRecoil(0)
 	self:SetNextIdle(0)
+
+	self.OriginalVMFov = self.ViewModelFOV
 end
 
 function SWEP:Initialize()

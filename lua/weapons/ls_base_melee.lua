@@ -17,7 +17,7 @@ function SWEP:PrimaryAttack()
 
 	if self.Primary.HitDelay then
 		timer.Simple(self.Primary.HitDelay, function()
-			if IsValid(self) and IsValid(self.Owner) then
+			if IsValid(self) and IsValid(self:GetOwner()) then
 				self:ClubAttack()
 				self:ViewPunch()
 			end
@@ -37,7 +37,7 @@ function SWEP:PrimaryAttack()
 		self:PlayAnim(self.HitAnim or ACT_VM_MISSCENTER)
 	end
 	
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 end
 
 function SWEP:Think()
