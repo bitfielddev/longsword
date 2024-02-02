@@ -12,6 +12,10 @@ function SWEP:Think()
 		self:CustomThink()
 	end
 
+	if self.DoSprintHoldType then 
+		self:SetHoldType( ( self:IsSprinting() and self:GetPassiveHoldType() ) or self.HoldType )
+	end
+	
 	if CLIENT then
 		self:SwayThink()
 	end
