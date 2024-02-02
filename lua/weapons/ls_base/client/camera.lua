@@ -348,6 +348,10 @@ function SWEP:GetViewFOV()
 		return self.IronsightsFOV
 	end
 
+	if (not self.NoSprintFOV) and self:IsSprinting() then
+		return self.SprintFOV or 1.08
+	end
+	
 	return 1
 end
 
