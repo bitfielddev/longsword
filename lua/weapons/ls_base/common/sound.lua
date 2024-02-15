@@ -26,8 +26,20 @@ function SWEP:PlayFireSound()
     self:EmitWeaponSound(self.Primary.Sound)
 
     if self.Primary.SoundLayers then
-        for _, snd in pairs(self.Primary.SoundLayers) do
-            self:EmitWeaponSound(snd, nil, nil, self.SoundLayerVol or 1)
+        if not self.Primary.SoundLayerDelay then
+            for _, snd in pairs(self.Primary.SoundLayers) do
+                self:EmitWeaponSound(snd, nil, nil, self.SoundLayerVol or 1)
+            end
+        else
+            timer.Simple(self.Primary.SoundLayerDelay, function()
+                for _, snd in pairs(self.Primary.SoundLayers) do
+                    self:EmitWeaponSound(snd, nil, nil, self.SoundLayerVol or 1)
+                end
+            end)
         end
+
+        
     end
+
+    
 end
