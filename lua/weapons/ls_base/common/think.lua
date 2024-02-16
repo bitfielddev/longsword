@@ -164,7 +164,7 @@ function SWEP:SoundThink()
 end
 
 function SWEP:LoweredThink()
-	if impulse then
+	if impulse or ix then
 		if self:GetLowered() then
 			self:SetLowered(false)
 		end
