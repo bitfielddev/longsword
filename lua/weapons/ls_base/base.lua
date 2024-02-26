@@ -164,6 +164,11 @@ end
 
 
 function SWEP:Deploy()
+	local ply = self:GetOwner()
+
+	if ply:IsNPC() then
+		return self:Remove() -- NPC support has not been added, this avoids possible errors
+	end
 	if self.CustomMaterial then
 		if CLIENT then
 			self.Owner:GetViewModel():SetMaterial(self.CustomMaterial)
@@ -171,7 +176,7 @@ function SWEP:Deploy()
 		end
 	end
 
-	local vm = self:GetOwner():GetViewModel()
+	local vm = ply:GetViewModel()
 
 	if self.CustomSubMats then
 		for id, mat in pairs(self.CustomSubMats) do
