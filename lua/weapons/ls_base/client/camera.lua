@@ -298,7 +298,15 @@ function SWEP:GetViewModelPosition( pos, ang )
 	local vm = self:GetOwner():GetViewModel()
 	if IsFirstTimePredicted() or game.SinglePlayer() then
 		local muz = self:LookupAttachment(self.MuzzleAttachment or "muzzle")
-		local att = (muz > 0) and self:GetAttachment(muz) or { Pos = vm:GetPos(), Ang = vm:GetAngles() }
+		if muz > 0 then
+			att = vm:GetAttachment(muz)
+		else
+			print("e")
+			att = {
+				Pos = vm:LocalToWorld(Vector(20, -2, 0)),
+				Ang = vm:GetAngles()
+			}
+		end
 	
 		att.Pos = vm:WorldToLocal(att.Pos)
 		att.Ang = vm:WorldToLocalAngles(att.Ang)
