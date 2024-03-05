@@ -12,6 +12,7 @@ function SWEP:Inspect()
 end
 
 function SWEP:Reload()
+	self.HammerDown = false
 	if self:Clip1() >= self:GetMaxClip1() then
 		return self:Inspect()
 	end
