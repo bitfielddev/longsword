@@ -120,6 +120,7 @@ function SWEP:IronsightsThink()
 
 
 	if self.Owner:KeyDown(IN_ATTACK2) and self:CanIronsight() and not self:GetIronsights() then
+		if hook.Run("LSOnIronsights", self, true) then return end
 		self:SetIronsights( true )
 		if CLIENT and (IsFirstTimePredicted() or game.SinglePlayer()) then
 			if self.IronsightsFrac < 0.01 then
@@ -130,6 +131,7 @@ function SWEP:IronsightsThink()
 			self:EmitWeaponSound(longsword.ironInSound or "LS_Generic.ADSIn")
 		end
 	elseif (not self.Owner:KeyDown(IN_ATTACK2) or not self:CanIronsight()) and self:GetIronsights() then
+		if hook.Run("LSOnIronsights", self, false) then return end
 		self:SetIronsights( false )
 
 		if CLIENT and (IsFirstTimePredicted() or game.SinglePlayer()) then
