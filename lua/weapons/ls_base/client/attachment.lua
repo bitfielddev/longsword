@@ -1,4 +1,6 @@
 local wepMeta = FindMetaTable("Weapon")
+local CurTime = UnPredictedCurTime
+local math, sin, cos, approach, abs = math, math.sin, math.cos, math.Approach, math.abs
 
 -- https://github.com/Lexicality/stencil-tutorial/blob/master/lua/stencil_tutorial/09_advanced_masks.lua
 -- this prevents everything except the specified entity to draw (i think idfk)
@@ -88,6 +90,8 @@ function SWEP:DrawVMAttachmentScope(attID)
 	local ply = self:GetOwner()
 	local vm = ply:GetViewModel()
 
+	local ct = CurTime()
+
 	local att = attData._CSModel
 	if not IsValid(att) then return end
 
@@ -102,13 +106,31 @@ function SWEP:DrawVMAttachmentScope(attID)
 		c.drawhud = false 
 		c.aspect = 1
 
-	if scope.RTOffset then
-		c.drawviewmodel = true
+	local scopeOffset = scope.RTOffset
+	local scopeOffsetAng = scope.RTOffsetAng 
 
+	if scope.ShakeIntensity and self:GetIronsights() then
+		local amp = scope.ShakeIntensity
+		local freq = scope.ShakeSpeed or 1
+		scopeOffset = scopeOffset or Vector()
+
+		amp = longsword.util.runHook("LSCalculateShakeIntensity", amp, self, amp)
+		freq = longsword.util.runHook("LSCalculateShakeFrequency", freq, self, freq)
+
+		scopeOffset:Add(Vector(
+			sin(ct * 3 * freq) * amp,
+			cos(ct * 2 * freq) * amp,
+			0
+		))
+	end
+
+	if scopeOffset then
 		local attPos = self.LastVMPos or vm:GetPos()
 		local attAng = self.LastVMAng or vm:GetAngles()
 
-		attPos, attAng = longsword.math.translate(attPos, attAng, scope.RTOffset, scope.RTOffsetAng or Angle())
+		scopeOffsetAng = scopeOffsetAng or Angle()
+
+		attPos, attAng = longsword.math.translate(attPos, attAng, scopeOffset, scopeOffsetAng)
 
 		c.origin = attPos
 		c.angles = attAng
