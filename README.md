@@ -18,6 +18,3 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3092301722
 * Custom crosshair that changes based on spread
 * Custom WorldModel support (use SWEP.WMOffset as a table with `Position` and `Angles`)
 * Custom recoil effects
-
-### Webhooks
-If you wish to have repository updates sent to a webhook, please DM bingoose0 on discord with the webhook link.
