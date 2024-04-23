@@ -1,4 +1,6 @@
 function SWEP:PlayAnim(act)
+	if not IsValid(self:GetOwner()) or not IsValid(self:GetOwner():GetViewModel()) return
+	
 	local vmodel = self:GetOwner():GetViewModel()
 	local seq = isstring(act) and self:LookupSequence(act) or vmodel:SelectWeightedSequence(act)
 
