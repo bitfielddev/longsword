@@ -1,5 +1,5 @@
 longsword = longsword or {}
-longsword.version = "2.2.1"
+longsword.version = "2.3.0"
 
 longsword.CLIENT = 1
 longsword.SERVER = 2
