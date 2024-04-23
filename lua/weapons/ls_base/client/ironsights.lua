@@ -12,6 +12,7 @@ SWEP.IronsightsInMid = Vector(-4, 0, -2.5)
 
 SWEP.IronsightsOutMidAng = Angle(0, 0, 0)
 SWEP.IronsightsOutMid = Vector(-2, 0, -2)
+
 function SWEP:GetRecoilMultiplier()
 	return (self.Recoil and self.Recoil.VisualMultiplier or self.IronsightsRecoilVisualMultiplier) or 1
 end
