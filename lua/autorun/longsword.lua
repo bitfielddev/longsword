@@ -1,4 +1,5 @@
 longsword = longsword or {}
+longsword.config = longsword.config or {}
 longsword.version = "2.3.0"
 
 longsword.CLIENT = 1
@@ -46,6 +47,14 @@ function longsword.debugPrint(msg)
     if dev:GetBool() then
         print("[longsword debug] " .. msg)
     end
+end
+
+local blue = Color(0, 0, 255)
+local gray = Color(155, 155, 155)
+
+function longsword.print(...)
+    local text = table.concat({...}, "")
+    MsgC("[", blue, "longsword", gray, "] ", color_white, text, "\n")
 end
 
 longsword.includeDirectory("longsword/lib")
