@@ -111,16 +111,17 @@ function SWEP:DrawVMAttachmentScope(attID)
 
 	if scope.ShakeIntensity and self:GetIronsights() then
 		local amp = scope.ShakeIntensity
-		local freq = scope.ShakeSpeed or 1
 		scopeOffset = scopeOffset or Vector()
 
 		amp = amp * longsword.util.runHook("LSCalculateShakeIntensity", 1, self)
-		freq = freq * longsword.util.runHook("LSCalculateShakeFrequency", 1, self)
+
+		local p0 = sin(ct * 1.2) * 0.4 * amp
+		local p1 = cos(ct * 2) * 0.1 * amp
 
 		scopeOffset:Add(Vector(
-			sin(ct * 3 * freq) * amp,
-			cos(ct * 2 * freq) * amp,
-			0
+			p0,
+			0,
+			p1
 		))
 	end
 

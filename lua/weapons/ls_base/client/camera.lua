@@ -140,13 +140,15 @@ function SWEP:ViewIdleOffset(eyePos, eyeAng)
 	if self.NoIdle then return eyePos, eyeAng end
 	local ct = CurTime()
 
-	local amp = self:GetIronsights() and 0.03 or 1
+	local amp = self:GetIronsights() and 0.2 or 0.6
 
-	local p0 = sin(ct * 1.2) * 0.55
+	local p0 = sin(ct * 1.2) * 0.4 * amp
+	local p1 = cos(ct * 2) * 0.1 * amp
 
-	local pos = Vector(p0 * 0.3, 0, 0) * amp
-	local ang = Angle(p0, 0, 0) * amp
+	local pos = Vector(p0 * 0.3, 0, p1)
+	local ang = Angle(p0, 0, 0)
 
+	
 	return longsword.math.translate(eyePos, eyeAng, pos, ang)
 end
 
