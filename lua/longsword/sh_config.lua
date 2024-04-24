@@ -1,0 +1,1 @@
+longsword.config.shouldCheckForUpdates = true
