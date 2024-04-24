@@ -107,22 +107,18 @@ function SWEP:DrawVMAttachmentScope(attID)
 		c.aspect = 1
 
 	local scopeOffset = scope.RTOffset
-	local scopeOffsetAng = scope.RTOffsetAng 
+	local scopeOffsetAng = scope.RTOffsetAng
 
-	if scope.ShakeIntensity and self:GetIronsights() then
-		local amp = scope.ShakeIntensity
+	if self.ShakeIntensity and self:GetIronsights() then
+		local amp = self.ShakeScopeMultiplier or 1
 		scopeOffset = scopeOffset or Vector()
+		scopeOffsetAng = scopeOffsetAng or Angle()
 
 		amp = amp * longsword.util.runHook("LSCalculateShakeIntensity", 1, self)
 
-		local p0 = sin(ct * 1.2) * 0.4 * amp
-		local p1 = cos(ct * 2) * 0.1 * amp
+		scopeOffset:Add((self._LastShakePos or Vector()) * amp)
+		scopeOffsetAng:Add((self._LastShakeAng or Angle()) * amp)
 
-		scopeOffset:Add(Vector(
-			p0,
-			0,
-			p1
-		))
 	end
 
 	if scopeOffset then

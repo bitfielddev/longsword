@@ -140,14 +140,16 @@ function SWEP:ViewIdleOffset(eyePos, eyeAng)
 	if self.NoIdle then return eyePos, eyeAng end
 	local ct = CurTime()
 
-	local amp = self:GetIronsights() and 0.2 or 0.6
+	local amp = (self:GetIronsights() and 0.2 or 0.6) * self.ShakeIntensity or 0.6
 
-	local p0 = sin(ct * 1.2) * 0.4 * amp
-	local p1 = cos(ct * 2) * 0.1 * amp
+	local p0 = sin(ct * 2.2) * 0.4 * amp
+	local p1 = cos(ct * 4) * 0.1 * amp
 
 	local pos = Vector(p0 * 0.3, 0, p1)
 	local ang = Angle(p0, 0, 0)
 
+	self._LastShakePos = pos
+	self._LastShakeAng = ang
 	
 	return longsword.math.translate(eyePos, eyeAng, pos, ang)
 end
