@@ -89,10 +89,10 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local spr = self:IsSprinting()
 
 	if spr then
-		ct = ct * 1.5
+		ct = ct * 1.7
 	else
 		ct = ct * 1.05
-		mv = mv * 2.5
+		mv = mv * 2
 	end
 	
 	local muz = self.MuzzleData or {}
@@ -100,38 +100,18 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local muzPos = muz.Pos or Vector()
 	local muzAng = muz.Ang or Angle()
 
-	-- First
-	local v0 = cos(ct * 7.5) * 1.2 * mv
-	local v1 = sin(ct * 16.5) * 0.5 * mv
+	local back = mv * 0.5
 
-	eyePos, eyeAng = longsword.math.rotateAround(
-		eyePos,
-		eyeAng,
-		muzPos,
-		Angle(
-			(mv * 1.5) - v1,
-			v0,
-			0
-		)
-	)
-	v0 = sin(ct * 7.5) * 3.5 * mv
-	local r = sin(ct * 8) * 1.6 * mv
+	local p1 = sin(ct * 5.5) * mv
+	local p2 = cos(ct * 11) * mv * (spr and 0.25 or -0.25)
+	
+	local r = sin(ct * 7.5 * (spr and 1.15 or 1)) * mv * 1.2
 
-	-- Finalize
-	eyePos, eyeAng = longsword.math.translate(
-		eyePos,
-		eyeAng,
-		Vector(
-			v0 * 0.25,
-			0,
-			0
-		),
-		Angle(
-			0,
-			v0,
-			r
-		)
-	)
+	local pos = Vector(p1, -back, p2 - back)
+	local ang = Angle(p2 * 2, 0, r)
+
+	eyePos, eyeAng = longsword.math.translate(eyePos, eyeAng, pos, Angle())
+	eyePos, eyeAng = longsword.math.rotateAround(eyePos, eyeAng, muzPos, ang)
 
 	return eyePos, eyeAng
 end
@@ -140,17 +120,17 @@ function SWEP:ViewIdleOffset(eyePos, eyeAng)
 	if self.NoIdle then return eyePos, eyeAng end
 	local ct = CurTime()
 
-	local amp = (self:GetIronsights() and 0.2 or 0.6) * self.ShakeIntensity or 0.6
+	local amp = (self:GetIronsights() and 0.2 or 0.6) * (self.ShakeIntensity or 0.6)
 
 	local p0 = sin(ct * 2.2) * 0.4 * amp
 	local p1 = cos(ct * 4) * 0.1 * amp
 
 	local pos = Vector(p0 * 0.3, 0, p1)
-	local ang = Angle(p0, 0, 0)
+	local ang = Angle(p0, 0, p1)
 
 	self._LastShakePos = pos
 	self._LastShakeAng = ang
-	
+
 	return longsword.math.translate(eyePos, eyeAng, pos, ang)
 end
 
@@ -182,9 +162,11 @@ function SWEP:SwayThink()
 	dist = dist * 5.5
 	dist = dist * (self.SwayMul or 1)
 
-	dist.p = -math.Clamp(dist.p, -5, 5)
-    dist.y = math.Clamp(dist.y, -5, 5)
-    dist.r = math.Clamp(dist.r, -5, 5)
+	local max = 2
+
+	dist.p = -math.Clamp(dist.p, -max, max)
+    dist.y = math.Clamp(dist.y, -max, max)
+    dist.r = math.Clamp(dist.r, -max, max)
 
 	
     self.VMSwayAng = LerpAngle(ft * 32, self.VMSwayAng or dist, dist)
@@ -195,20 +177,26 @@ end
 function SWEP:ViewSwayOffset(eyePos, eyeAng)
 	local ft = RealFrameTime()
     local swayRaw = self.VMSwayAng or Angle()
-	local sway = 1.4 * (self:GetIronsights() and 0.2 or 1)
+	local sway = 1.2 * (self:GetIronsights() and 0.2 or 1)
 
     swayRaw.r = -(swayRaw.y * 0.4) * 1.5 * sway
 
     self.VMSwayAngSmooth = LerpAngle(ft * 2, self.VMSwayAngSmooth or swayRaw, swayRaw)
-    local ang = self.VMSwayAngSmooth * 2
+    local ang = self.VMSwayAngSmooth * 2 * sway
+
+	
+	local muzPos = self.SwayRootPos or Vector(self.MuzzleData.Pos)
+	muzPos.x = muzPos.x - (ang.y * 2)
+	muzPos.z = muzPos.z - (ang.p * 2)
+
+	ang.p = -ang.p
 
 	local mul = (self.SwayPosMul or 1) + (self.SwayMul or 1)
-    return longsword.math.translate(
+    return longsword.math.rotateAround(
         eyePos, 
         eyeAng, 
-        Vector(ang.y * 0.1 * mul, 0, -ang.p * 0.1 * mul), 
-        ang, 
-        sway
+		muzPos,
+        -ang
     )
 end
 
@@ -305,9 +293,8 @@ function SWEP:GetViewModelPosition( pos, ang )
 		if muz > 0 then
 			att = vm:GetAttachment(muz)
 		else
-			print("e")
 			att = {
-				Pos = vm:LocalToWorld(Vector(20, -2, 0)),
+				Pos = vm:LocalToWorld(Vector(20, -2, -2)),
 				Ang = vm:GetAngles()
 			}
 		end
