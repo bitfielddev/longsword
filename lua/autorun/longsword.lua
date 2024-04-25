@@ -13,7 +13,8 @@ end
 function tern(condition, value, default)
     if not isbool(condition) then return longsword.util.tern(condition != nil, value, default) end
 
-    if condition then return value else return default end
+    -- actual ternary
+    return condition and value or default
 end
 
 --- Includes a file by auto-detecting its realm.
