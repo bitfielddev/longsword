@@ -89,10 +89,10 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local spr = self:IsSprinting()
 
 	if spr then
-		ct = ct * 1.7
+		ct = ct * 1.5
 	else
 		ct = ct * 1.05
-		mv = mv * 2
+		mv = mv * 2.5
 	end
 	
 	local muz = self.MuzzleData or {}
@@ -100,18 +100,38 @@ function SWEP:ViewBob(eyePos, eyeAng, mv, ct, ft)
 	local muzPos = muz.Pos or Vector()
 	local muzAng = muz.Ang or Angle()
 
-	local back = mv * 0.5
+	-- First
+	local v0 = cos(ct * 7.5) * 1.2 * mv
+	local v1 = sin(ct * 16.5) * 0.5 * mv
 
-	local p1 = sin(ct * 5.5) * mv
-	local p2 = cos(ct * 11) * mv * (spr and 0.25 or -0.25)
-	
-	local r = sin(ct * 7.5 * (spr and 1.15 or 1)) * mv * 1.2
+	eyePos, eyeAng = longsword.math.rotateAround(
+		eyePos,
+		eyeAng,
+		muzPos,
+		Angle(
+			(mv * 1.5) - v1,
+			v0,
+			0
+		)
+	)
+	v0 = sin(ct * 7.5) * 3.5 * mv
+	local r = sin(ct * 8) * 1.6 * mv
 
-	local pos = Vector(p1, -back, p2 - back)
-	local ang = Angle(p2 * 2, 0, r)
-
-	eyePos, eyeAng = longsword.math.translate(eyePos, eyeAng, pos, Angle())
-	eyePos, eyeAng = longsword.math.rotateAround(eyePos, eyeAng, muzPos, ang)
+	-- Finalize
+	eyePos, eyeAng = longsword.math.translate(
+		eyePos,
+		eyeAng,
+		Vector(
+			v0 * 0.25,
+			0,
+			0
+		),
+		Angle(
+			0,
+			v0,
+			r
+		)
+	)
 
 	return eyePos, eyeAng
 end
