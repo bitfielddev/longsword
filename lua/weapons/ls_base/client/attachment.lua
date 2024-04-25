@@ -109,7 +109,7 @@ function SWEP:DrawVMAttachmentScope(attID)
 	local scopeOffset = scope.RTOffset
 	local scopeOffsetAng = scope.RTOffsetAng
 
-	if self.ShakeIntensity and self:GetIronsights() then
+	if self.ShakeIntensity and self:GetIronsights() and self.ShouldShakeScope then
 		local amp = self.ShakeScopeMultiplier or 1
 		scopeOffset = scopeOffset or Vector()
 		scopeOffsetAng = scopeOffsetAng or Angle()

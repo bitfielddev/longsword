@@ -140,7 +140,7 @@ function SWEP:ViewIdleOffset(eyePos, eyeAng)
 	if self.NoIdle then return eyePos, eyeAng end
 	local ct = CurTime()
 
-	local amp = (self:GetIronsights() and 0.2 or 0.6) * (self.ShakeIntensity or 0.6)
+	local amp = tern(self:GetIronsights(), 0.2, 0.6) * (self.ShakeIntensity or 0.6)
 
 	local p0 = sin(ct * 2.2) * 0.4 * amp
 	local p1 = cos(ct * 4) * 0.1 * amp
@@ -206,8 +206,8 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
 
 	
 	local muzPos = self.SwayRootPos or Vector(self.MuzzleData.Pos)
-	muzPos.x = muzPos.x - (ang.y * 2)
-	muzPos.z = muzPos.z - (ang.p * 2)
+	muzPos.x = muzPos.x - (ang.y * 4)
+	muzPos.z = muzPos.z - (ang.p * 4)
 
 	ang.p = -ang.p
 
