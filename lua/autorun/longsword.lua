@@ -10,6 +10,12 @@ function RPM(rpm)
 	return 60 / rpm
 end
 
+function tern(condition, value, default)
+    if not isbool(condition) then return longsword.util.tern(condition != nil, value, default) end
+
+    if condition then return value else return default end
+end
+
 --- Includes a file by auto-detecting its realm.
 -- @string filePath The file path
 -- @realm shared
