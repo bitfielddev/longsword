@@ -253,6 +253,37 @@ function SWEP:ViewCrouchOffset(eyePos, eyeAng)
 	return longsword.math.translate(eyePos, eyeAng, pos, ang)
 end
 
+function SWEP:ViewWallOffset(eyePos, eyeAng)
+	local ply = self:GetOwner()
+	local ft = RealFrameTime()
+
+	local traceData = {}
+		traceData.start = ply:GetShootPos()
+		traceData.endpos = traceData.start + ply:GetAimVector() * 26
+		traceData.filter = ply
+	
+	local trace = util.TraceLine(traceData)
+
+	local wallNew = (trace.Hit and trace.Fraction or 1) - 1
+	local wall = Lerp(ft * 9, self.VMWallBlock or 0, wallNew)
+
+	self.VMWallBlock = wall
+	return longsword.math.translate(
+		eyePos,
+		eyeAng,
+		Vector(
+			0,
+			(wall * 4 * (self.WallBlockLength or 1)),
+			wall * 8
+		),
+		Angle(
+			-wall * 8,
+			-wall * 2,
+			0
+		)
+	)
+end
+
 function SWEP:Centered()
 	local cv = GetConVar("longsword_centered")
 	if cv and cv:GetBool() then
@@ -326,6 +357,7 @@ function SWEP:GetViewModelPosition( pos, ang )
 	pos, ang = self:CalcViewBob(pos, ang)
 	pos, ang = self:ViewSwayOffset(pos, ang)
 	pos, ang = self:ViewIdleOffset(pos, ang)
+    pos, ang = self:ViewWallOffset(pos, ang)
 	pos, ang = self:ViewCrouchOffset(pos, ang)
 	pos, ang = self:JumpOffset(pos, ang)
 
