@@ -19,8 +19,20 @@ hook.Add("ScalePlayerDamage", "longswordArmourPen", function(ply, hitgroup, dmg)
     if IsValid(attacker) and attacker:IsPlayer() then
         local wep = attacker:GetActiveWeapon()
 
-        if IsValid(wep) and wep.Primary and wep.Primary.PenetrationScale then
-            dmg:ScaleDamage(wep.Primary.PenetrationScale)
+        if not ( IsValid(wep) ) then
+            return
+        end
+
+        if ( wep.Primary ) then
+            if ( wep.Primary.PenetrationScale ) then
+                dmg:ScaleDamage(wep.Primary.PenetrationScale)
+            elseif ( wep.Primary.PenetrationScaleGroups ) then
+                local wepGroup = wep.Primary.PenetrationScaleGroups[hitgroup]
+
+                if ( wepGroup ) then
+                    dmg:ScaleDamage(wepGroup)
+                end
+            end
         end
     end
 end)
