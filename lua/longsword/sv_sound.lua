@@ -6,10 +6,16 @@ function meta:EmitDynSound(path, pitch, level, volume, noMuffle)
     level = level or 100
     volume = volume or 1
 
+    local range = 5000 ^ 2
     local rec = RecipientFilter()
+    local pos = self:GetPos()
 
-    for _, ply in pairs(player.GetAll()) do
-        if ply:GetPos():DistToSqr(self:GetPos()) < (5000 ^ 2) then
+    for _, ply in player.Iterator() do
+        if not ( IsValid(ply) ) then
+            continue
+        end
+
+        if ply:GetPos():DistToSqr(pos) < range then
             rec:AddPlayer(ply)
         end
     end
