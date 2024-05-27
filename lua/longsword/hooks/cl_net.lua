@@ -4,7 +4,7 @@ net.Receive("longswordEcho", function()
 
     if not IsValid(ply) or not ply:IsPlayer() then return end
 
-    if ply == LocalPlayer()  then return end
+    if ply == LocalPlayer() then return end
 
     local wep = ply:GetActiveWeapon()
     if not IsValid(wep) or not wep.IsLongsword then return end
