@@ -68,16 +68,16 @@ function meta:EmitDynSound(path, pitch, level, volume, noMuffle)
     pitch = pitch or 100
     level = level or 100
     volume = volume or 1
+    local me = LocalPlayer()
 
-    if self == LocalPlayer() then
+    if self == me then
         self:EmitSound(path, level, pitch, volume)
         return
     end
 
-    local me = LocalPlayer()
     local origin = self:GetPos()
     local eye = EyePos()
-    local ang = Angle()
+    local ang = angle_zero
 
     local cv = GetConVar("longsword_dynsound_maxbounces")
     local maxBounces = cv and cv:GetInt() or 8
@@ -127,7 +127,7 @@ function meta:EmitDynSound(path, pitch, level, volume, noMuffle)
     end
 
     if not noMuffle then
-        local dir = (self:GetPos() - eye):GetNormalized()
+        local dir = (origin - eye):GetNormalized()
         local tr = longsword.sound.quickTrace(eye, dir)
         if tr.Entity != self then
             local tr2 = longsword.sound.quickTrace(tr.HitPos + (dir * 16), dir)
