@@ -33,7 +33,7 @@ end
 -- @string dirPath The directory path
 -- @realm shared
 function longsword.includeDirectory(dirPath)
-    for _, fileName in pairs(file.Find(dirPath .. "/*.lua", "LUA")) do
+    for _, fileName in ipairs(file.Find(dirPath .. "/*.lua", "LUA")) do
         longsword.include(dirPath .. "/" .. fileName)
     end
 end
