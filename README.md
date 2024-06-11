@@ -19,3 +19,9 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3092301722
 * Custom WorldModel support (use SWEP.WMOffset as a table with `Position` and `Angles`)
 * Custom recoil effects
 * Gnomes?
+
+# Contribution rules
+* Put spaces after commas.
+* Spaces after parentheses are optional but not encouraged. (the readability increase is minimal if not none)
+* Do not put code that depends on a binary module or external unincluded library unless it is optional.
+* Prioritize optimization over organization.
