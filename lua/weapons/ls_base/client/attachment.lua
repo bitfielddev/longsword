@@ -109,18 +109,6 @@ function SWEP:DrawVMAttachmentScope(attID)
 	local scopeOffset = scope.RTOffset
 	local scopeOffsetAng = scope.RTOffsetAng
 
-	if self.ShakeIntensity and self:GetIronsights() and self.ShouldShakeScope then
-		local amp = self.ShakeScopeMultiplier or 1
-		scopeOffset = scopeOffset or Vector()
-		scopeOffsetAng = scopeOffsetAng or Angle()
-
-		amp = amp * longsword.util.runHook("LSCalculateShakeIntensity", 1, self)
-
-		scopeOffset:Add((self._LastShakePos or Vector()) * amp)
-		scopeOffsetAng:Add((self._LastShakeAng or Angle()) * amp)
-
-	end
-
 	if scopeOffset then
 		local attPos = self.LastVMPos or vm:GetPos()
 		local attAng = self.LastVMAng or vm:GetAngles()
@@ -137,7 +125,7 @@ function SWEP:DrawVMAttachmentScope(attID)
 	render.OverrideAlphaWriteEnable(true, true)
 
 	cam.Start2D()
-	render.Clear(255, 255, 255, 0)
+	render.Clear(0, 0, 0, 0)
 	render.RenderView(c)
 	cam.End2D()
 
