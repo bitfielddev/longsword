@@ -30,6 +30,7 @@ function SWEP:DrawWorldModel( f )
 
 		WorldModel:SetupBones()
 	else
+		local WorldModel = self.WorldModel
 		WorldModel:SetPos(self:GetPos())
 		WorldModel:SetAngles(self:GetAngles())
 	end
