@@ -22,6 +22,10 @@ if not ConVarExists("longsword_dyncrosshair") then
 	CreateClientConVar("longsword_dyncrosshair", "1", true, false, "If the custom crosshair should be used.", 0, 1)
 end
 
+if not ConVarExists("longsword_dynsound") then
+    CreateConVar("longsword_dynsound", 0, FCVAR_REPLICATED, "(EXPERIMENTAL) Use dynamic/raytraced sound effects.", 0, 1)
+end
+
 if not ConVarExists("longsword_dynsound_maxbounces") then
 	CreateClientConVar("longsword_dynsound_maxbounces", "8", true, false, "Max bounces to use for Longsword-DynSound. The amount of traces made is MaxBounces * 6", 4, 128)
 end

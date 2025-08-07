@@ -95,12 +95,13 @@ function SWEP:DrawVMAttachmentScope(attID)
 	local att = attData._CSModel
 	if not IsValid(att) then return end
 
+	local w, h = ScrW(), ScrH()
 	local c = {}
 		c.origin = vm:GetPos()
 		c.angles = EyeAngles()
 		c.fov = scope.FOV or 14
 		c.x, c.y = 0, 0
-		c.w, c.h = ScrW(), ScrH()
+		c.w, c.h = w, h
 
 		c.drawviewmodel = false
 		c.drawhud = false 
@@ -127,6 +128,10 @@ function SWEP:DrawVMAttachmentScope(attID)
 	cam.Start2D()
 	render.Clear(0, 0, 0, 0)
 	render.RenderView(c)
+	if attData.Scope.Fisheye then
+		DrawMaterialOverlay("models/props_c17/fisheyelens", attData.Scope.Fisheye)
+	end
+
 	cam.End2D()
 
 	draw.NoTexture()

@@ -23,22 +23,26 @@ function SWEP:PlayFireSound()
 
     end
 
-    self:EmitWeaponSound(self.Primary.Sound)
-
-    if self.Primary.SoundLayers then
-        if not self.Primary.SoundLayerDelay then
-            for _, snd in pairs(self.Primary.SoundLayers) do
-                self:EmitWeaponSound(snd, nil, nil, self.SoundLayerVol or 1)
-            end
-        else
-            timer.Simple(self.Primary.SoundLayerDelay, function()
+    local dynSoundCv = GetConVar("longsword_dynsound")
+    if dynSoundCv:GetBool() then
+        if CLIENT and IsFirstTimePredicted() or SERVER then
+            self:EmitDynSound(self.Primary.Sound, nil, 140)
+        end
+    else
+        self:EmitWeaponSound(self.Primary.Sound)
+        if self.Primary.SoundLayers then
+            if not self.Primary.SoundLayerDelay then
                 for _, snd in pairs(self.Primary.SoundLayers) do
                     self:EmitWeaponSound(snd, nil, nil, self.SoundLayerVol or 1)
                 end
-            end)
+            else
+                timer.Simple(self.Primary.SoundLayerDelay, function()
+                    for _, snd in pairs(self.Primary.SoundLayers) do
+                        self:EmitWeaponSound(snd, nil, nil, self.SoundLayerVol or 1)
+                    end
+                end)
+            end
         end
-
-        
     end
 
     
