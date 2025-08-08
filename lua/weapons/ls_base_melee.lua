@@ -70,7 +70,7 @@ function SWEP:ClubAttack()
 	end
 
 	if SERVER and tr.Hit then
-		hook.Run("LongswordMeleeHit", self.Owner)
+		hook.Run("LongswordMeleeHit", self.Owner, self)
 
 		if self.Primary.ImpactSound and not self.Primary.ImpactSoundWorldOnly then
 			self.Owner:EmitSound(self.Primary.ImpactSound)

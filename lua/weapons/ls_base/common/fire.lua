@@ -96,6 +96,10 @@ function SWEP:Shoot()
 
 	self:AddRecoil()
 	self:ViewPunch()
+
+	if isfunction(self.ExtraShoot) then
+		self:ExtraShoot()
+	end
 	
 	self:SetReloadTime(CurTime() + self.Primary.Delay)
 end

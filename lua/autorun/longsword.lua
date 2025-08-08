@@ -60,7 +60,7 @@ local gray = Color(155, 155, 155)
 
 function longsword.print(...)
     local text = table.concat({...}, "")
-    MsgC("[", blue, "longsword", gray, "] ", color_white, text, "\n")
+    MsgC(gray, "[", blue, "longsword", gray, "] ", color_white, text, "\n")
 end
 
 longsword.includeDirectory("longsword/lib")

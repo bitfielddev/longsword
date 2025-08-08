@@ -199,13 +199,14 @@ function SWEP:ViewSwayOffset(eyePos, eyeAng)
     local swayRaw = self.VMSwayAng or Angle()
 	local sway = 1.2 * (self:GetIronsights() and 0.2 or 1)
 
+	local muz = self.MuzzleData or {}
     swayRaw.r = -(swayRaw.y * 0.4) * 1.5 * sway
 
     self.VMSwayAngSmooth = LerpAngle(ft * 2, self.VMSwayAngSmooth or swayRaw, swayRaw)
     local ang = self.VMSwayAngSmooth * 2 * sway
 
 	
-	local muzPos = self.SwayRootPos or Vector(self.MuzzleData.Pos)
+	local muzPos = self.SwayRootPos or Vector(muz.Pos)
 	muzPos.x = muzPos.x - (ang.y * 4)
 	muzPos.z = muzPos.z - (ang.p * 4)
 
